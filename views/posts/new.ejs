@@ -1,0 +1,12 @@
+<%- include('../header'); -%>
+<div class="container">
+<h1>add</h1>
+<p><a href="/">back</a></p>
+<form method="POST" action="/posts/create">
+    name: <input type="text" name="name"><br>
+    category: <input type="text" name="category"><br>
+    ISBN: <input type="text" name="isbn13"><br>
+    <input type="submit" value="登録">
+</form>
+</div>
+<%- include('../footer'); -%>

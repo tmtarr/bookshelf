@@ -1,0 +1,12 @@
+<%- include('../header'); -%>
+<div class="container">
+<h1>edit</h1>
+<p><a href="/">back</a></p>
+<form method="POST" action="/posts/<%= id %>?_method=put">
+    name: <input type="text" name="name" value="<%= book.bookname %>"><br>
+    category: <input type="text" name="category" value="<%= book.category %>"><br>
+    ISBN: <input type="text" name="isbn13" value="<%= book.isbn13 %>"><br>
+    <input type="submit" value="update">
+</form>
+</div>
+<%- include('../footer'); -%>
