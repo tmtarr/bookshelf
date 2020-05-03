@@ -7,8 +7,8 @@ var express = require('express'),
 const PORT = process.env.PORT || 5000;
 
 // テンプレートの場所を指定
-app.set('views', __dirname + '\\views');
-app.use(express.static(__dirname + '\\public'));
+app.set('views', __dirname + '/views');
+app.use(express.static(__dirname + '/public'));
 
 // 利用するテンプレートエンジンの設定
 app.set('view engine', 'ejs');
