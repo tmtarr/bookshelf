@@ -4,6 +4,8 @@ var express = require('express'),
 	app = express(),
 	post = require('./routes/post');
 
+const PORT = process.env.PORT || 5000;
+
 // テンプレートの場所を指定
 app.set('views', __dirname + '\\views');
 app.use(express.static(__dirname + '\\public'));
@@ -26,9 +28,10 @@ app.get('/posts/:id/edit', post.edit);	// 更新 編集フォームを表示
 app.put('/posts/:id', post.update);		// フォームの投稿先
 app.delete('/posts/:id', post.destroy);	// 削除
 
-app.listen(3000);
+app.listen(PORT);
 console.log("server starting...");
 
 /*
-http://localhost:3000/
+http://localhost:5000/
+https://intense-temple-32472.herokuapp.com/
 */
