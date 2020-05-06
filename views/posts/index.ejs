@@ -11,13 +11,16 @@
 			<th>category</th>
 			<th>edit</th>
 			<th>del</th>
-			<th>link</th>
 		</tr>
 	</thead>
 	<tbody>
 		<% for (var i = 0; i < books.length; i++) { %>
 			<tr>
-				<td><img src="http://images-jp.amazon.com/images/P/<%= books[i].isbn10 %>.09.MZZZZZZZ.jpg"></td>
+				<td>
+					<a href="https://amazon.jp/dp/<%= books[i].isbn10 %>" target="_blank">
+						<img src="http://images-jp.amazon.com/images/P/<%= books[i].isbn10 %>.09.MZZZZZZZ.jpg">
+					</a>
+				</td>
 				<td><%= books[i].bookname %></td>
 				<td><%= books[i].category %></td>
 				<td>
@@ -30,7 +33,6 @@
 						<input type="submit" value="delete">
 					</form>
 				</td>
-				<td><a href="https://amazon.jp/dp/<%= books[i].isbn10 %>" target="_blank">[buy]</a></td>
 			</tr>
 		<% } %>
 
