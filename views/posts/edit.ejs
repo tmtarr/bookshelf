@@ -1,12 +1,30 @@
 <%- include('../header'); -%>
 <div class="container">
-<h1>edit</h1>
-<p><a href="/">back</a></p>
-<form method="POST" action="/posts/<%= id %>?_method=put">
-    name: <input type="text" name="name" value="<%= book.bookname %>"><br>
-    category: <input type="text" name="category" value="<%= book.category %>"><br>
-    ISBN: <input type="text" name="isbn13" value="<%= book.isbn13 %>"><br>
-    <input type="submit" value="update">
-</form>
+  <h1>edit</h1>
+  <p><a href="/">back</a></p>
+
+  <div class="row">
+    <div class="col-6">
+      <form method="POST" action="/posts/<%= id %>?_method=put">
+        <div class="form-group">
+          <label>ISBN</label>
+          <input type="text" class="form-control" id="isbn13" name="isbn13" maxlength="13" value="<%= book.isbn13 %>">
+        </div>
+        <div class="form-group">
+          <label>name</label>
+          <input type="text" class="form-control" id="name" name="name" value="<%= book.bookname %>">
+        </div>
+        <div class="form-group">
+          <label>category</label>
+          <input type="text" class="form-control" id="category" name="category" value="<%= book.category %>">
+        </div>
+
+        <input type="button" id="btnGet" value="情報取得" alt="ISBNから強制取得">
+        <input type="submit" value="更新">
+      </form>
+    </div>
+  </div>
 </div>
+<script type="text/javascript" src="/javascripts/isbn.js"></script>
+<script type="text/javascript" src="/javascripts/edit.js"></script>
 <%- include('../footer'); -%>

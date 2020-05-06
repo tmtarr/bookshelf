@@ -1,19 +1,30 @@
 <%- include('../header'); -%>
 <div class="container">
-<h1>add</h1>
-<p><a href="/">back</a></p>
-<form method="POST" action="/posts/create">
-    ISBN: <input type="text" id="isbn13" name="isbn13" maxlength="13">
-    <input type="button" value="書籍情報取得" onclick="getBookInfo();">
-    <br>
-    name: <input type="text" id="name" name="name"><br>
-    category: <input type="text" id="category" name="category"><br>
-    <input type="submit" value="登録">
-</form>
-<br>
-<input type="text" id="getname">
-<input type="button" value="反映" onclick="setName();">
+  <h1>add</h1>
+  <p><a href="/">back</a></p>
+
+  <div class="row">
+    <div class="col-6">
+      <form method="POST" action="/posts/create">
+        <div class="form-group">
+          <label>ISBN</label>
+          <input type="text" class="form-control" id="isbn13" name="isbn13" maxlength="13">
+        </div>
+        <div class="form-group">
+          <label>name</label>
+          <input type="text" class="form-control" id="name" name="name">
+        </div>
+        <div class="form-group">
+          <label>category</label>
+          <input type="text" class="form-control" id="category" name="category">
+        </div>
+
+        <input type="button" id="btnGet" value="情報取得" alt="ISBNから強制取得">
+        <input type="submit" value="登録">
+      </form>
+    </div>
+  </div>
 </div>
 <script type="text/javascript" src="/javascripts/isbn.js"></script>
-<script type="text/javascript" src="/javascripts/new.js"></script>
+<script type="text/javascript" src="/javascripts/edit.js"></script>
 <%- include('../footer'); -%>
