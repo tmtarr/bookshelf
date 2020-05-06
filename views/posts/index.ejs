@@ -19,7 +19,11 @@
 				<td><img src="http://images-jp.amazon.com/images/P/<%= books[i].isbn10 %>.09.MZZZZZZZ.jpg"></td>
 				<td><%= books[i].bookname %></td>
 				<td><%= books[i].category %></td>
-				<td><a href="/posts/<%= books[i].id %>/edit">[edit]</td>
+				<td>
+					<form method="GET" action="/posts/<%= books[i].id %>/edit">
+						<input type="submit" value="edit">
+					</form>
+				</td>
 				<td>
 					<form method="POST" action="/posts/<%= books[i].id %>?_method=delete">
 						<input type="submit" value="delete">
