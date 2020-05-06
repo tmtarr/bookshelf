@@ -11,6 +11,7 @@
 			<th>category</th>
 			<th>edit</th>
 			<th>del</th>
+			<th>link</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -29,6 +30,7 @@
 						<input type="submit" value="delete">
 					</form>
 				</td>
+				<td><a href="https://amazon.jp/dp/<%= books[i].isbn10 %>" target="_blank">[buy]</a></td>
 			</tr>
 		<% } %>
 

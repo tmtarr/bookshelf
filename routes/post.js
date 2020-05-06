@@ -28,6 +28,7 @@ exports.create = function(req, res) {
     aryQuery.push("  ,bookname");
     aryQuery.push("  ,category");
     aryQuery.push("  ,isbn13");
+    aryQuery.push("  ,chgisbn13to10(isbn13) as isbn10");
     aryQuery.push(")");
     aryQuery.push("select");
     aryQuery.push("  to_char(to_number(max(id), '99999') + 1, 'FM00000')");
