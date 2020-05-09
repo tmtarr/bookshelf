@@ -57,3 +57,16 @@ function callOpenBD(isbn13, listener) {
 //    console.log("after open");
     return true;
 }
+function callGoogleBooks(isbn13, listener) {
+    if (isbn13.length != 13) {
+        return false;
+    }
+    var oReq = new XMLHttpRequest();
+    oReq.addEventListener("load", listener);
+//    console.log("before open");
+    oReq.open("GET", "https://www.googleapis.com/books/v1/volumes?q=isbn:" + isbn13);
+    oReq.responseType = 'json';
+    oReq.send();
+//    console.log("after open");
+    return true;
+}
