@@ -46,7 +46,7 @@ function chgISBN13to10(isbn13) {
 //}
 function callOpenBD(isbn13, listener) {
     if (isbn13.length != 13) {
-        return;
+        return false;
     }
     var oReq = new XMLHttpRequest();
     oReq.addEventListener("load", listener);
@@ -55,4 +55,5 @@ function callOpenBD(isbn13, listener) {
     oReq.responseType = 'json';
     oReq.send();
 //    console.log("after open");
+    return true;
 }

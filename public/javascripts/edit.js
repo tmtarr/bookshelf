@@ -5,12 +5,16 @@ document.getElementById("btnGet").addEventListener('click', getBookInfoForce);
 // OpenBDから書誌情報を取得
 function getBookInfo() {
     var isbn13 = document.getElementById("isbn13").value;
-    callOpenBD(isbn13, setData);
+    if (callOpenBD(isbn13, setData)) {
+        document.getElementById("loading").style.display = "";
+    }
 }
 
 function getBookInfoForce() {
     var isbn13 = document.getElementById("isbn13").value;
-    callOpenBD(isbn13, setDataForce);
+    if (callOpenBD(isbn13, setDataForce)) {
+        document.getElementById("loading").style.display = "";
+    }
 }
 
 // 取得データをフォームに設定
@@ -22,6 +26,9 @@ function setDataForce() {
 }
 
 function setOpenBDData(record, force) {
+    // load完了
+    document.getElementById("loading").style.display = "none";
+
     // 存在チェック
     if (!record) {
         return;
