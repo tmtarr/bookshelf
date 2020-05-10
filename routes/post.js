@@ -38,17 +38,13 @@ exports.create = function(req, res) {
             aryQuery.push("  ,bookname");
             aryQuery.push("  ,category");
             aryQuery.push("  ,isbn13");
+            aryQuery.push(") values (");
+            aryQuery.push("$1, $2, $3, $4");
             aryQuery.push(")");
-            aryQuery.push("select");
-            aryQuery.push("  to_char(to_number(max(id), '99999') + 1, 'FM00000')");
-            aryQuery.push("  ,$1");
-            aryQuery.push("  ,$2");
-            aryQuery.push("  ,$3");
-            aryQuery.push("from booklist");
-            aryQuery.push(";");
 
             // パラメータ
             var aryParam = [];
+            aryParam.push(id);
             aryParam.push(req.body.name);
             aryParam.push(req.body.category);
             aryParam.push(req.body.isbn13);
