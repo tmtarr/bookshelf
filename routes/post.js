@@ -20,34 +20,58 @@ exports.new = function(req, res) {
 
 exports.create = function(req, res) {
 
-    // 登録
-    // クエリ
-    var aryQuery = [];
-    aryQuery.push("insert into booklist(");
-    aryQuery.push("  id");
-    aryQuery.push("  ,bookname");
-    aryQuery.push("  ,category");
-    aryQuery.push("  ,isbn13");
-    aryQuery.push(")");
-    aryQuery.push("select");
-    aryQuery.push("  to_char(to_number(max(id), '99999') + 1, 'FM00000')");
-    aryQuery.push("  ,$1");
-    aryQuery.push("  ,$2");
-    aryQuery.push("  ,$3");
-    aryQuery.push("from booklist");
-    aryQuery.push(";");
+    (async () => {
+        const client = await pool.connect();
+        try {
+            await client.query('begin');
 
-    // パラメータ
-    var aryParam = [];
-    aryParam.push(req.body.name);
-    aryParam.push(req.body.category);
-    aryParam.push(req.body.isbn13);
+            // id取得
+            const resq = await client.query("select to_char(to_number(max(id), '99999') + 1, 'FM00000') as id from booklist");
+            const id = resq.rows[0].id;
+            console.log("new id: " + id);
 
-    // クエリ実行
-    pool.query(aryQuery.join(" "), aryParam, (perr, pres) => {
-	    // 一覧を再表示
-        res.redirect('/');
-    });
+            // 登録
+            // クエリ
+            var aryQuery = [];
+            aryQuery.push("insert into booklist(");
+            aryQuery.push("  id");
+            aryQuery.push("  ,bookname");
+            aryQuery.push("  ,category");
+            aryQuery.push("  ,isbn13");
+            aryQuery.push(")");
+            aryQuery.push("select");
+            aryQuery.push("  to_char(to_number(max(id), '99999') + 1, 'FM00000')");
+            aryQuery.push("  ,$1");
+            aryQuery.push("  ,$2");
+            aryQuery.push("  ,$3");
+            aryQuery.push("from booklist");
+            aryQuery.push(";");
+
+            // パラメータ
+            var aryParam = [];
+            aryParam.push(req.body.name);
+            aryParam.push(req.body.category);
+            aryParam.push(req.body.isbn13);
+
+            // クエリ実行
+            await client.query(aryQuery.join(" "), aryParam);
+
+            await client.query('commit');
+            console.log("commit");
+
+        } catch(e) {
+            await client.query('rollback');
+            console.log("rollback");
+            console.log(e);
+
+        } finally {
+            client.release();
+            console.log("release");
+            // 一覧を再表示
+            res.redirect('/');
+        }
+    })();
+
 };
 
 exports.edit = function(req, res) {
