@@ -8,7 +8,7 @@
           <form method="POST" action="/posts/<%= id %>?_method=put">
             <div class="form-group">
               <label>ISBN</label>
-              <input type="number" class="form-control" id="isbn13" name="isbn13" maxlength="13" value="<%= book.isbn13 %>">
+              <input type="number" class="form-control" id="isbn13" name="isbn13" maxlength="13" value="<%= book.isbn13 %>" placeholder="ISBN-13に整形されます">
             </div>
             <div class="form-group">
               <label>name</label><img id="loading" src="/images/loading02_r3_c3.gif" style="margin-left: 10px;display: none;">

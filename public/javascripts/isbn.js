@@ -1,5 +1,5 @@
 /**
- * 機能名：chg13to10
+ * 機能名：chgISBN13to10
  * 概要：ISBN-13をISBN-10に変換する
  * 備考：計算方法は以下サイトを参考にした
  * http://www.infonet.co.jp/ueyama/ip/glossary/isbn.html
@@ -34,6 +34,44 @@ function chgISBN13to10(isbn13) {
     // ISBN-10作成
     var isbn10 = isbn9 + checkdigit;
     return isbn10;
+}
+
+/**
+ * 機能名：calcISBN13
+ * 概要：入力されたISBNによりISBN13を計算する
+ * 備考：計算方法は以下サイトを参考にした
+ * https://ja.wikipedia.org/wiki/ISBN
+ */
+function calcISBN13(inIsbn) {
+
+    var isbn12;
+    // 入力チェック
+    if (inIsbn.length == 9 || inIsbn.length == 10) {
+        isbn12 = "978" + inIsbn.substr(0, 9);
+    } else if (inIsbn.length >= 12) {
+        isbn12 = inIsbn.substr(0, 12);
+    } else {
+        return inIsbn;
+    }
+
+    // チェックデジット計算
+    var numCheck = 0;
+    for (var i = 0; i < 12; i++) {
+        if (i % 2 == 0) {
+            numCheck += isbn12.substr(i, 1) * 1;
+        } else {
+            numCheck += isbn12.substr(i, 1) * 3;
+        }
+    }
+
+    var checkdigit = 10 - numCheck % 10;
+    if (checkdigit == 10) {
+        checkdigit = 0;
+    }
+
+    // ISBN-13作成
+    var isbn13 = isbn12 + checkdigit;
+    return isbn13;
 }
 
 //function reqListener() {

@@ -1,19 +1,43 @@
 // イベント設定
 document.getElementById("isbn13").addEventListener('blur', blurISBN);
-document.getElementById("btnGet").addEventListener('click', getBookInfo);
+document.getElementById("btnGet").addEventListener('click', clickGetButton);
 
 // ISBN入力後イベント
 function blurISBN() {
+    // ISBN整形
+    formatISBN13();
+
     // 既に名前が入力済みの場合は処理しない
     if (document.getElementById("name").value) {
         return;
     }
+    // 情報取得
     getBookInfo();
+}
+
+// 情報取得ボタン
+function clickGetButton() {
+    // ISBN整形
+    formatISBN13();
+
+    // 情報取得
+    getBookInfo();
+}
+
+// ISBN13整形
+function formatISBN13() {
+    var inIsbn = document.getElementById("isbn13").value;
+    var isbn13 = calcISBN13(inIsbn);
+    if (inIsbn != isbn13) {
+        document.getElementById("isbn13").value = isbn13;
+    }
 }
 
 // OpenBDから書誌情報を取得
 function getBookInfo() {
+    // ISBN取得
     var isbn13 = document.getElementById("isbn13").value;
+    // 検索
     if (callOpenBD(isbn13, setData)) {
         document.getElementById("loading").style.display = "";
     }
