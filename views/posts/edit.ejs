@@ -16,7 +16,34 @@
             </div>
             <div class="form-group">
               <label>category</label>
-              <input type="text" class="form-control" id="category" name="category" value="<%= book.category %>">
+              <input type="text" list="registered_category" class="form-control custom-select" id="category" name="category" value="<%= book.category %>">
+              <!-- 【TODO】リストの管理方法は要検討 -->
+              <datalist id="registered_category">
+                <option value="C"></option>
+                <option value="C#"></option>
+                <option value="computer science"></option>
+                <option value="design"></option>
+                <option value="develop"></option>
+                <option value="Git"></option>
+                <option value="Java"></option>
+                <option value="JavaScript"></option>
+                <option value="Linux"></option>
+                <option value="management"></option>
+                <option value="math"></option>
+                <option value="network"></option>
+                <option value="novel"></option>
+                <option value="Oracle"></option>
+                <option value="OS"></option>
+                <option value="other"></option>
+                <option value="Perl"></option>
+                <option value="PowerShell"></option>
+                <option value="Python"></option>
+                <option value="Ruby"></option>
+                <option value="security"></option>
+                <option value="Visual Basic"></option>
+                <option value="WSH"></option>
+                <option value="Windows"></option>
+              </datalist>
             </div>
 
             <input type="button" id="btnGet" value="情報取得">
