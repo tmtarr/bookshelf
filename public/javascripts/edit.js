@@ -1,6 +1,7 @@
 // イベント設定
 document.getElementById("isbn13").addEventListener('blur', blurISBN);
 document.getElementById("btnGet").addEventListener('click', clickGetButton);
+document.getElementById("btnGetNDL").addEventListener('click', clickNDLButton);
 
 // ISBN入力後イベント
 function blurISBN() {
@@ -83,4 +84,42 @@ function setGoogleBooksData() {
 
     // load完了
     document.getElementById("loading").style.display = "none";
+}
+
+function setNDLData() {
+    //    var record = this.response.items[0]; 
+    console.log(this.response);
+    if (this.response.record) {
+        // console.log(this.response.record[0].recordData.srw_dc.title._text);
+        var record = this.response.record[0]; 
+        console.log(record.recordData.srw_dc);
+        document.getElementById("name").value = record.recordData.srw_dc.title._text;
+    }
+    
+//        if (this.response.totalItems > 0) {
+//            var record = this.response.items[0]; 
+//            document.getElementById("name").value = record.volumeInfo.title;
+//        }
+    
+    // load完了
+    document.getElementById("loading").style.display = "none";
+}
+    
+// 情報取得ボタン
+function clickNDLButton() {
+
+    // ISBN整形
+    formatISBN13();
+    var isbn13 = document.getElementById("isbn13").value;
+
+    // ローディング
+    document.getElementById("loading").style.display = "";
+
+    let listener = setNDLData;
+
+    var oReq = new XMLHttpRequest();
+    oReq.addEventListener("load", listener);
+    oReq.open("GET", "/ndl/" + isbn13);
+    oReq.responseType = 'json';
+    oReq.send();
 }

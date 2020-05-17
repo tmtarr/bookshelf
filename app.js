@@ -26,12 +26,10 @@ app.get('/posts/new', post.new);		// 新規作成フォームを表示
 app.post('/posts/create', post.create);	// formのpost先
 app.get('/posts/:id/edit', post.edit);	// 更新 編集フォームを表示
 app.put('/posts/:id', post.update);		// フォームの投稿先
-app.delete('/posts/:id', post.destroy);	// 削除
+app.delete('/posts/:id', post.delete);	// 削除
+
+// ajax用API
+app.get('/ndl/:isbn', post.ndl);		// NDL検索
 
 app.listen(PORT);
 console.log("server starting...");
-
-/*
-http://localhost:5000/
-https://intense-temple-32472.herokuapp.com/
-*/
