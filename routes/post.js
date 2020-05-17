@@ -147,8 +147,17 @@ exports.searchNDL = function(req, res) {
             // 結果をconsoleで確認
             // const json = JSON.stringify(obj.searchRetrieveResponse.records);
             // console.log(json);
+            let record = {};
+
+            // レコードが1つの場合はオブジェクト、2つ以上の場合は配列になる records.record
+            if (obj.searchRetrieveResponse.records.record) {
+                record = obj.searchRetrieveResponse.records.record[0]
+                || obj.searchRetrieveResponse.records.record;
+            }
+            // console.log(record);
 
             // JSON形式で返却
-        	res.json(obj.searchRetrieveResponse.records);
+        	// res.json(obj.searchRetrieveResponse.records);
+        	res.json(record);
         });
 };

@@ -107,10 +107,12 @@ function setGoogleBooksData() {
 
 function setNDLData() {
     console.log(this.response);
-    if (this.response.record) {
-        var record = this.response.record[0]; 
-        console.log(record.recordData.srw_dc);
-        document.getElementById("name").value = record.recordData.srw_dc.title._text;
+    if (this.response) {
+        var record = this.response;
+        if (record.recordData) {
+            console.log(record.recordData.srw_dc);
+            document.getElementById("name").value = record.recordData.srw_dc.title._text;
+        }
     }
     
     // load完了
