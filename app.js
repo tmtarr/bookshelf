@@ -29,7 +29,7 @@ app.put('/posts/:id', post.update);		// フォームの投稿先
 app.delete('/posts/:id', post.delete);	// 削除
 
 // ajax用API
-app.get('/ndl/:isbn', post.ndl);		// NDL検索
+app.get('/ndl/:isbn', post.searchNDL);		// NDL検索
 
 app.listen(PORT);
 console.log("server starting...");

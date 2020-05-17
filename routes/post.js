@@ -131,8 +131,8 @@ exports.delete = function(req, res) {
 // NDLから情報を取得し、json形式でレスポンスを返す
 // ajaxを利用してのアクセスを想定
 // 【TODO】一定時間待ち続けた場合タイムアウトさせたい
-exports.ndl = function(req, res) {
-    console.log(req.params.isbn);   // 入力ISBNチェック用
+exports.searchNDL = function(req, res) {
+    // console.log(req.params.isbn);   // 入力ISBNチェック用
 
     fetch('http://iss.ndl.go.jp/api/sru?operation=searchRetrieve&query=isbn=' + req.params.isbn)
         .then(res => res.text())
@@ -142,17 +142,13 @@ exports.ndl = function(req, res) {
             repxml = repxml.replace(/&gt;/g, ">");
             repxml = repxml.replace(/&quot;/g, '"');
             repxml = repxml.replace(/dc:/g, '');
-//            console.log(repxml);
-//            const json = convert.xml2json(repxml, {compact: true, spaces: 4});
             const obj = convert.xml2js(repxml, {compact: true, spaces: 4});
 
             // 結果をconsoleで確認
-            const json = JSON.stringify(obj.searchRetrieveResponse.records);
-            console.log(json);
+            // const json = JSON.stringify(obj.searchRetrieveResponse.records);
+            // console.log(json);
+
+            // JSON形式で返却
         	res.json(obj.searchRetrieveResponse.records);
-        	//res.send(json);
-        	//res.json(json);
-        	//res.send('{a: "aaa", b: "bbb"}');
-        	//res.json('{a: "aaa", b: "bbb"}');
         });
 };

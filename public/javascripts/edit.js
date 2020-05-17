@@ -25,6 +25,15 @@ function clickGetButton() {
     getBookInfo();
 }
 
+// 情報取得ボタン(NDL)
+function clickNDLButton() {
+    // ISBN整形
+    formatISBN13();
+
+    // 情報取得
+    getBookInfoNDL();
+}
+
 // ISBN13整形
 function formatISBN13() {
     var inIsbn = document.getElementById("isbn13").value;
@@ -40,6 +49,16 @@ function getBookInfo() {
     var isbn13 = document.getElementById("isbn13").value;
     // 検索
     if (callOpenBD(isbn13, setData)) {
+        document.getElementById("loading").style.display = "";
+    }
+}
+
+// NDLから書誌情報を取得
+function getBookInfoNDL() {
+    // ISBN取得
+    var isbn13 = document.getElementById("isbn13").value;
+    // 検索
+    if (callNDL(isbn13, setNDLData)) {
         document.getElementById("loading").style.display = "";
     }
 }
@@ -87,39 +106,13 @@ function setGoogleBooksData() {
 }
 
 function setNDLData() {
-    //    var record = this.response.items[0]; 
     console.log(this.response);
     if (this.response.record) {
-        // console.log(this.response.record[0].recordData.srw_dc.title._text);
         var record = this.response.record[0]; 
         console.log(record.recordData.srw_dc);
         document.getElementById("name").value = record.recordData.srw_dc.title._text;
     }
     
-//        if (this.response.totalItems > 0) {
-//            var record = this.response.items[0]; 
-//            document.getElementById("name").value = record.volumeInfo.title;
-//        }
-    
     // load完了
     document.getElementById("loading").style.display = "none";
-}
-    
-// 情報取得ボタン
-function clickNDLButton() {
-
-    // ISBN整形
-    formatISBN13();
-    var isbn13 = document.getElementById("isbn13").value;
-
-    // ローディング
-    document.getElementById("loading").style.display = "";
-
-    let listener = setNDLData;
-
-    var oReq = new XMLHttpRequest();
-    oReq.addEventListener("load", listener);
-    oReq.open("GET", "/ndl/" + isbn13);
-    oReq.responseType = 'json';
-    oReq.send();
 }

@@ -108,3 +108,16 @@ function callGoogleBooks(isbn13, listener) {
 //    console.log("after open");
     return true;
 }
+
+function callNDL(isbn13, listener) {
+
+    if (isbn13.length != 13) {
+        return false;
+    }
+    var oReq = new XMLHttpRequest();
+    oReq.addEventListener("load", listener);
+    oReq.open("GET", "/ndl/" + isbn13);
+    oReq.responseType = 'json';
+    oReq.send();
+    return true;
+}
