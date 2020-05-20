@@ -7,8 +7,8 @@
             <th>image</th>
             <th>name</th>
             <th>category</th>
-            <th>edit</th>
-            <th>del</th>
+            <th>action</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -23,12 +23,12 @@
               <td><%= books[i].category %></td>
               <td>
                 <form method="GET" action="/posts/<%= books[i].id %>/edit">
-                  <input type="submit" value="edit">
+                  <input type="submit" value="edit" class="btn btn-secondary">
                 </form>
               </td>
               <td>
                 <form method="POST" action="/posts/<%= books[i].id %>?_method=delete">
-                  <input type="submit" value="delete">
+                  <input type="submit" value="delete" class="btn btn-danger">
                 </form>
               </td>
             </tr>
