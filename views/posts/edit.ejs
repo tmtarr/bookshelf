@@ -45,9 +45,26 @@
               </datalist>
             </div>
 
-            <input type="button" id="btnGet" value="情報取得">
-            <input type="button" id="btnGetNDL" value="情報取得(NDL)">
+            <!--
+            <input type="button" id="btnGetx" value="情報取得">
+            <input type="button" id="btnGetNDLx" value="情報取得(NDL)">
             <input type="submit" value="更新">
+            <br>
+            -->
+            <div class="btn-group" role="group">
+              <button type="button" id="btnGet" class="btn btn-secondary">情報取得</button>
+              <button type="button" id="btnGetNDL" class="btn btn-secondary">情報取得(NDL)</button>
+<!--
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                </button>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" id="btnGetNDL" href="#">NDLから取得</a>
+                </div>
+              </div>
+-->
+            </div>
+            <button type="submit" class="btn btn-primary">更新</button>
           </form>
         </div>
       </div>
