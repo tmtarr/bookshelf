@@ -5,3 +5,11 @@
 .title {
     margin-top: 0.5rem;
 }
+
+.bi-question-circle-fill {
+    color: yellowgreen;
+}
+
+.tooltip-inner {
+    max-width: 100%;
+}
