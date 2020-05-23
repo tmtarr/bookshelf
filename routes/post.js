@@ -27,7 +27,7 @@ exports.index = function(req, res) {
         aryQuery.push(")");
         aryParam.push('%' + req.query.q + '%');
     }
-    aryQuery.push("order by id");
+    aryQuery.push("order by id desc");
 
     // 実行
     pool.query(aryQuery.join(" "), aryParam, (perr, pres) => {
