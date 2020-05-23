@@ -12,9 +12,27 @@ const convert = require('xml-js');
 // 一覧取得
 exports.index = function(req, res) {
 
-    pool.query('select *, chgisbn13to10(isbn13) as isbn10 from booklist order by id', (perr, pres) => {
+    // パラメータ
+    var aryParam = [];
+
+    // クエリ
+    var aryQuery = [];
+    aryQuery.push("select *, chgisbn13to10(isbn13) as isbn10");
+    aryQuery.push("from booklist");
+    aryQuery.push("where 1=1");
+    if (req.query.q) {
+        aryQuery.push("and(");
+        aryQuery.push("  bookname ilike $1");
+        aryQuery.push("  or category ilike $1");
+        aryQuery.push(")");
+        aryParam.push('%' + req.query.q + '%');
+    }
+    aryQuery.push("order by id");
+
+    // 実行
+    pool.query(aryQuery.join(" "), aryParam, (perr, pres) => {
         books = pres.rows;
-        res.render('posts/index', {books: books});
+        res.render('posts/index', {books: books, qstr: req.query.q});
     });
 };
 
