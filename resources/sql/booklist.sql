@@ -7,7 +7,8 @@ create table booklist(
 	place varchar(20),
 	note varchar(100),
 	isbn13 varchar(13),
-	img_url varchar(100)
+	ebook_flg varchar(1),
+	wish_flg varchar(1)
 );
 
 -- primary key
