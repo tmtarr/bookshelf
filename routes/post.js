@@ -40,6 +40,7 @@ exports.new = function(req, res) {
 	res.render('posts/new');
 };
 
+// 登録
 exports.create = function(req, res) {
 
     (async () => {
@@ -60,8 +61,10 @@ exports.create = function(req, res) {
             aryQuery.push("  ,bookname");
             aryQuery.push("  ,category");
             aryQuery.push("  ,isbn13");
+            aryQuery.push("  ,ebook_flg");
+            aryQuery.push("  ,wish_flg");
             aryQuery.push(") values (");
-            aryQuery.push("$1, $2, $3, $4");
+            aryQuery.push("$1, $2, $3, $4, $5, $6");
             aryQuery.push(")");
 
             // パラメータ
@@ -70,7 +73,9 @@ exports.create = function(req, res) {
             aryParam.push(req.body.name);
             aryParam.push(req.body.category);
             aryParam.push(req.body.isbn13);
-
+            aryParam.push(req.body.ebookFlg);
+            aryParam.push(req.body.wishFlg);
+        
             // クエリ実行
             await client.query(aryQuery.join(" "), aryParam);
 
@@ -96,10 +101,13 @@ exports.edit = function(req, res) {
 
     pool.query('select * from booklist where id = $1', [req.params.id], (perr, pres) => {
         var book = pres.rows[0];
+        book.ebookFlg = book.ebook_flg == 1 ? "checked" : "";
+        book.wishFlg = book.wish_flg == 1 ? "checked" : "";
         res.render('posts/edit', {book: book, id: req.params.id});
     });
 };
 
+// 更新
 exports.update = function(req, res) {
 
     // 更新
@@ -110,15 +118,18 @@ exports.update = function(req, res) {
     aryQuery.push("bookname = $1");
     aryQuery.push(",category = $2");
     aryQuery.push(",isbn13 = $3");
+    aryQuery.push(",ebook_flg = $4");
+    aryQuery.push(",wish_flg = $5");
     aryQuery.push("where");
-    aryQuery.push("id = $4");
-    aryQuery.push(";");
+    aryQuery.push("id = $6");
     
     // パラメータ
     var aryParam = [];
     aryParam.push(req.body.name);
     aryParam.push(req.body.category);
     aryParam.push(req.body.isbn13);
+    aryParam.push(req.body.ebookFlg);
+    aryParam.push(req.body.wishFlg);
     aryParam.push(req.params.id);
 
     // クエリ実行

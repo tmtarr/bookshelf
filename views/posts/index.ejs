@@ -20,7 +20,17 @@
                 </a>
               </td>
               <td><%= books[i].bookname %></td>
-              <td><%= books[i].category %></td>
+              <td>
+                <div><%= books[i].category %></div>
+                <ul>
+                  <% if (books[i].ebook_flg == 1) { %>
+                    <li class="flg_eb">電</li>
+                  <% } %>
+                  <% if (books[i].wish_flg == 1) { %>
+                    <li class="flg_want">欲</li>
+                  <% } %>
+                  </ul>
+              </td>
               <td>
                 <form method="GET" action="/posts/<%= books[i].id %>/edit">
                   <input type="submit" value="edit" class="btn btn-secondary">
@@ -34,13 +44,6 @@
             </tr>
           <% } %>
       
-          <!-- sample
-          <tr>
-            <td><img src="http://images-jp.amazon.com/images/P/4873118646.09.MZZZZZZZ.jpg"></td>
-            <td>初めてのJavaScript</td>
-            <td>JavaScript</td>
-          </tr>
-          -->
         </tbody>
       </table>
     </div>

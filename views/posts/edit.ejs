@@ -48,6 +48,16 @@
                 <option value="Windows"></option>
               </datalist>
             </div>
+            <div class="mb-3">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="inlineCheckbox1" name="ebookFlg" value="1" <%= book.ebookFlg %>>
+                <label class="form-check-label" for="inlineCheckbox1">電子書籍</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="inlineCheckbox2" name="wishFlg" value="1" <%= book.wishFlg %>>
+                <label class="form-check-label" for="inlineCheckbox2">ほしい</label>
+              </div>
+            </div>
             <div class="btn-group" role="group">
               <button type="button" id="btnGet" class="btn btn-secondary">情報取得</button>
               <button type="button" id="btnGetNDL" class="btn btn-secondary">情報取得(NDL)</button>

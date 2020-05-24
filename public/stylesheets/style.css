@@ -13,3 +13,26 @@
 .tooltip-inner {
     max-width: 100%;
 }
+
+ul {
+    padding: 0;
+}
+
+ul li {
+    font-size: 12px;
+    padding-left: 2px;
+    padding-right: 2px;
+    display: inline-block;
+    border-radius: 3px;
+    border: 1px solid;
+}
+
+.flg_eb {
+    background-color: khaki;
+    border-color: darkgoldenrod;
+}
+
+.flg_want {
+    background-color: lightpink;
+    border-color: violet;
+}
