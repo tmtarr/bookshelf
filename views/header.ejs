@@ -20,8 +20,8 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div class="navbar-nav">
-            <a class="nav-item nav-link" href="/">Home</a>
-            <a class="nav-item nav-link" href="/posts/new">New</a>
+            <a class="nav-item nav-link <%= display.activeHome %>" href="/">Home</a>
+            <a class="nav-item nav-link <%= display.activeNew %>" href="/posts/new">New</a>
           </div>
           <form class="form-inline my-2 my-lg-0 ml-5" method="GET" action="/">
             <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="q" value="<%= qstr %>">

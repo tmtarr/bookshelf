@@ -9,8 +9,18 @@ let books;
 const fetch = require('node-fetch');
 const convert = require('xml-js');
 
+// 画面制御オブジェクトのコンストラクタ
+function Display() {
+    this.activeHome = "";
+    this.activeNew = "";
+}
+
 // 一覧取得
 exports.index = function(req, res) {
+
+    // 画面制御
+    const display = new Display();
+    display.activeHome = "active";
 
     // パラメータ
     var aryParam = [];
@@ -32,12 +42,16 @@ exports.index = function(req, res) {
     // 実行
     pool.query(aryQuery.join(" "), aryParam, (perr, pres) => {
         books = pres.rows;
-        res.render('posts/index', {books: books, qstr: req.query.q});
+        res.render('posts/index', {display: display, books: books, qstr: req.query.q});
     });
 };
 
 exports.new = function(req, res) {
-	res.render('posts/new');
+    // 画面制御
+    const display = new Display();
+    display.activeNew = "active";
+
+	res.render('posts/new', {display: display});
 };
 
 // 登録
@@ -99,11 +113,14 @@ exports.create = function(req, res) {
 
 exports.edit = function(req, res) {
 
+    // 画面制御
+    const display = new Display();
+
     pool.query('select * from booklist where id = $1', [req.params.id], (perr, pres) => {
         var book = pres.rows[0];
         book.ebookFlg = book.ebook_flg == 1 ? "checked" : "";
         book.wishFlg = book.wish_flg == 1 ? "checked" : "";
-        res.render('posts/edit', {book: book, id: req.params.id});
+        res.render('posts/edit', {display: display, book: book, id: req.params.id});
     });
 };
 
