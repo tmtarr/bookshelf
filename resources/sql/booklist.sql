@@ -1,7 +1,7 @@
 -- ƒe[ƒuƒ‹ì¬
 create table booklist(
 	id varchar(5),
-	bookname varchar(100),
+	bookname varchar(200),
 	author varchar(100),
 	category varchar(100),
 	place varchar(20),
