@@ -13,6 +13,7 @@ const convert = require('xml-js');
 function Display() {
     this.activeHome = "";
     this.activeNew = "";
+    this.activeDoc = "";
 }
 
 // 一覧取得
@@ -172,6 +173,14 @@ exports.delete = function(req, res) {
 	    // 一覧を再表示
         res.redirect('/');
     });
+};
+
+exports.doc = function(req, res) {
+    // 画面制御
+    const display = new Display();
+    display.activeDoc = "active";
+
+	res.render('doc', {display: display});
 };
 
 // NDLから情報を取得し、json形式でレスポンスを返す

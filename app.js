@@ -27,6 +27,7 @@ app.post('/posts/create', post.create);	// formのpost先
 app.get('/posts/:id/edit', post.edit);	// 更新 編集フォームを表示
 app.put('/posts/:id', post.update);		// フォームの投稿先
 app.delete('/posts/:id', post.delete);	// 削除
+app.get('/doc', post.doc);              // ドキュメント
 
 // ajax用API
 app.get('/ndl/:isbn', post.searchNDL);		// NDL検索
