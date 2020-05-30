@@ -51,7 +51,7 @@ exports.new = function(req, res) {
     const display = new Display();
     display.activeNew = "active";
 
-	res.render('posts/new', {display: display});
+	res.render('posts/new', {display: display, isbn: req.query.isbn});
 };
 
 // 登録
