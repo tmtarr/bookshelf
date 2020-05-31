@@ -14,6 +14,7 @@ function Display() {
     this.activeHome = "";
     this.activeNew = "";
     this.activeDoc = "";
+    this.mode = "";
 }
 
 // 一覧取得
@@ -51,8 +52,11 @@ exports.new = function(req, res) {
     // 画面制御
     const display = new Display();
     display.activeNew = "active";
+    display.mode = "new";
+    const book = {};
+    book.isbn13 = req.query.isbn;
 
-	res.render('posts/new', {display: display, isbn: req.query.isbn});
+	res.render('posts/edit', {display: display, book: book});
 };
 
 // 登録
@@ -116,6 +120,7 @@ exports.edit = function(req, res) {
 
     // 画面制御
     const display = new Display();
+    display.mode = "edit";
 
     pool.query('select * from booklist where id = $1', [req.params.id], (perr, pres) => {
         var book = pres.rows[0];
