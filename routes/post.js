@@ -1,8 +1,5 @@
 // DB接続
-const { Pool } = require('pg');
-const pool = new Pool({
-	connectionString: process.env.DATABASE_URL
-});
+const pool = require('../modules/dbpool');
 let books;
 
 // NDL
@@ -15,6 +12,8 @@ function Display() {
     this.activeNew = "";
     this.activeDoc = "";
     this.mode = "";
+    this.userid = "";
+    this.login = false;
 }
 
 // 一覧取得
@@ -23,6 +22,10 @@ exports.index = function(req, res) {
     // 画面制御
     const display = new Display();
     display.activeHome = "active";
+    if (req.user) {
+        display.userid = req.user;
+        display.login = true;
+    }
 
     // パラメータ
     var aryParam = [];
@@ -187,6 +190,18 @@ exports.doc = function(req, res) {
 
 	res.render('doc', {display: display});
 };
+
+exports.login = function(req, res) {
+    // 画面制御
+    const display = new Display();
+
+	res.render('login', {display: display});
+};
+
+exports.logout = function(req, res) {
+    req.logout();
+    res.redirect('/');
+}
 
 // NDLから情報を取得し、json形式でレスポンスを返す
 // ajaxを利用してのアクセスを想定

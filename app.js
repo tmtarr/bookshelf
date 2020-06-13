@@ -2,7 +2,11 @@
 var express = require('express'),
 	methodOverride = require('method-override'),
 	app = express(),
-	post = require('./routes/post');
+	post = require('./routes/post'),
+	passport = require('passport'),
+	LocalStrategy = require('passport-local').Strategy,
+	session = require('express-session')
+	;
 
 const PORT = process.env.PORT || 5000;
 
@@ -20,6 +24,33 @@ app.use(express.urlencoded({extended: true}));
 // putメソッド・deleteメソッドに対応
 app.use(methodOverride('_method'));
 
+// 認証
+app.use(session({ secret: "nazo" }));
+app.use(passport.initialize());
+app.use(passport.session());
+
+// パスワードチェックのロジック
+passport.use(new LocalStrategy(
+    function(username, password, done) {
+        //return done(null, "hello");
+        console.log("にんしょうちゅう");
+        if (password != "fish") {
+            return done(null, false, {message: 'ちがうよ'});
+        }
+        return done(null, username);
+    }
+));
+
+// 【TODO】こちらは何をしているのかよくわかっていない
+// キーワードは「シリアライズ」かな？
+// express-sessionについて先に学んだほうがいいかもしれない
+passport.serializeUser(function(user, done) {
+    done(null, user);
+});
+passport.deserializeUser(function(user, done) {
+    done(null, user);
+});
+
 // ルーティング設定
 app.get('/', post.index);
 app.get('/posts/new', post.new);		// 新規作成フォームを表示
@@ -28,6 +59,14 @@ app.get('/posts/:id/edit', post.edit);	// 更新 編集フォームを表示
 app.put('/posts/:id', post.update);		// フォームの投稿先
 app.delete('/posts/:id', post.delete);	// 削除
 app.get('/doc', post.doc);              // ドキュメント
+app.get('/login', post.login);          // ログイン
+app.get('/logout', post.logout);
+app.post('/login',
+    passport.authenticate('local', {
+        successRedirect: '/',
+        failureRedirect: '/login'
+    })
+);
 
 // ajax用API
 app.get('/ndl/:isbn', post.searchNDL);		// NDL検索

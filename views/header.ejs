@@ -28,7 +28,13 @@
             <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="q" value="<%= qstr %>">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
           </form>    
-  
+          <div class="navbar-nav">
+            <a class="nav-item nav-link" href="/login">Login</a>
+            <a class="nav-item nav-link" href="/logout">Logout</a>
+          </div>
+          <% if (display.login) { %>
+            <span class="navbar-text">userid: <%= display.userid %></span>
+          <% } %>
         </div>
       </nav>
     </header>
