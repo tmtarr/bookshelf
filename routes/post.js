@@ -191,6 +191,7 @@ exports.doc = function(req, res) {
 	res.render('doc', {display: display});
 };
 
+// ログイン
 exports.login = function(req, res) {
     // 画面制御
     const display = new Display();
@@ -198,10 +199,22 @@ exports.login = function(req, res) {
 	res.render('login', {display: display});
 };
 
+// ログアウト
 exports.logout = function(req, res) {
     req.logout();
     res.redirect('/');
 }
+
+// サインアップ
+exports.signup = function(req, res) {
+    // 画面制御
+    const display = new Display();
+    //console.log("error? " + res.signuperror);
+    //console.log("req", req);
+    //console.log("res", res);
+
+	res.render('signup', {display: display});
+};
 
 // NDLから情報を取得し、json形式でレスポンスを返す
 // ajaxを利用してのアクセスを想定

@@ -5,7 +5,8 @@ var express = require('express'),
 	post = require('./routes/post'),
 	passport = require('passport'),
 	LocalStrategy = require('passport-local').Strategy,
-	session = require('express-session')
+    session = require('express-session'),
+    pool = require('./modules/dbpool')
 	;
 
 const PORT = process.env.PORT || 5000;
@@ -34,10 +35,29 @@ passport.use(new LocalStrategy(
     function(username, password, done) {
         //return done(null, "hello");
         console.log("にんしょうちゅう");
-        if (password != "fish") {
-            return done(null, false, {message: 'ちがうよ'});
-        }
-        return done(null, username);
+
+        // 認証
+        var aryQuery = [];
+        aryQuery.push("select userid from user_t where");
+        aryQuery.push("userid = $1");
+        aryQuery.push("and password = $2");
+    
+        var aryParam = [];
+        aryParam.push(username);
+        aryParam.push(password);
+    
+        pool.query(aryQuery.join(" "), aryParam, (perr, pres) => {
+            console.log(pres.rowCount);
+            if (pres.rowCount == 0) {
+                return done(null, false, {message: 'ちがうよ'});
+            }
+            return done(null, username);
+        });
+
+//        if (password != "fish") {
+//            return done(null, false, {message: 'ちがうよ'});
+//        }
+//        return done(null, username);
     }
 ));
 
@@ -67,6 +87,35 @@ app.post('/login',
         failureRedirect: '/login'
     })
 );
+app.get('/signup', post.signup);            // サインアップ画面
+app.post('/signup', function(req, res) {    // サインアップ処理
+
+    // 登録
+    var aryParam = [];
+    var aryQuery = [];
+
+    aryQuery.push("insert into user_t values (");
+    aryQuery.push("$1, $2, $3, 0)");
+
+    aryParam.push(req.body.userid);
+    aryParam.push(req.body.name);
+    aryParam.push(req.body.password);
+
+    pool.query(aryQuery.join(" "), aryParam, (perr, pres) => {
+        if (perr) {
+            const display = {};
+            display.error = true;
+            res.render('signup', {display: display});
+            //【TODO】redirect時に値を渡すことはできないか？の調査がしたい
+            //res.redirect('/signup');
+        } else {
+            // ログイン状態でトップ画面にリダイレクト
+            req.login(req.body.userid, function(err) {
+                return res.redirect('/');
+            });
+        }
+    });
+});
 
 // ajax用API
 app.get('/ndl/:isbn', post.searchNDL);		// NDL検索
