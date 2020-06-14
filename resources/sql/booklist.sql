@@ -8,7 +8,8 @@ create table booklist(
 	note varchar(100),
 	isbn13 varchar(13),
 	ebook_flg varchar(1),
-	wish_flg varchar(1)
+	wish_flg varchar(1),
+	userid varchar(20)
 );
 
 -- primary key
