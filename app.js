@@ -6,7 +6,8 @@ var express = require('express'),
 	passport = require('passport'),
 	LocalStrategy = require('passport-local').Strategy,
     session = require('express-session'),
-    pool = require('./modules/dbpool')
+    pool = require('./modules/dbpool'),
+    crypto = require('crypto')
 	;
 
 const PORT = process.env.PORT || 5000;
@@ -30,11 +31,19 @@ app.use(session({ secret: "nazo" }));
 app.use(passport.initialize());
 app.use(passport.session());
 
+// ハッシュ
+const getHash = function(id, password) {
+    const hash = crypto.scryptSync(id + password, 'yakisoba', 10).toString("base64");
+    return hash;
+}
+
 // パスワードチェックのロジック
 passport.use(new LocalStrategy(
     function(username, password, done) {
         //return done(null, "hello");
         console.log("にんしょうちゅう");
+        //console.log(getHash(username, password));
+        const hash = getHash(username, password);
 
         // 認証
         var aryQuery = [];
@@ -44,7 +53,8 @@ passport.use(new LocalStrategy(
     
         var aryParam = [];
         aryParam.push(username);
-        aryParam.push(password);
+        //aryParam.push(password);
+        aryParam.push(hash);
     
         pool.query(aryQuery.join(" "), aryParam, (perr, pres) => {
             console.log(pres.rowCount);
@@ -94,13 +104,15 @@ app.post('/signup', function(req, res) {    // サインアップ処理
     // 登録
     var aryParam = [];
     var aryQuery = [];
+    const hash = getHash(req.body.userid, req.body.password);
 
     aryQuery.push("insert into user_t values (");
     aryQuery.push("$1, $2, $3, 0)");
 
     aryParam.push(req.body.userid);
     aryParam.push(req.body.name);
-    aryParam.push(req.body.password);
+    //aryParam.push(req.body.password);
+    aryParam.push(hash);
 
     pool.query(aryQuery.join(" "), aryParam, (perr, pres) => {
         if (perr) {
