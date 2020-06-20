@@ -16,15 +16,37 @@ function Display() {
     this.login = false;
 }
 
+function makeDisplay(req) {
+    const display = new Display();
+    if (req.user) {
+        display.userid = req.user;
+        display.login = true;
+    }
+    return display;
+}
+
+// メイン
+exports.main = function(req, res) {
+
+    // 画面制御
+    const display = makeDisplay(req);
+    res.render('main', {display: display});
+}
+
 // 一覧取得
 exports.index = function(req, res) {
 
     // 画面制御
-    const display = new Display();
-    display.activeHome = "active";
-    if (req.user) {
-        display.userid = req.user;
-        display.login = true;
+    const display = makeDisplay(req);
+
+    // 検索対象のuseridを決定
+    var userid;
+    if (req.params.userid) {
+        userid = req.params.userid;     // 他人のを参照
+    } else {
+        display.editable = true;
+        userid = display.userid;        // 自分のを編集
+        display.activeHome = "active";
     }
 
     // パラメータ
@@ -32,13 +54,17 @@ exports.index = function(req, res) {
 
     // クエリ
     var aryQuery = [];
-    aryQuery.push("select *, chgisbn13to10(isbn13) as isbn10");
-    aryQuery.push("from booklist");
+    aryQuery.push("select bl.*, chgisbn13to10(isbn13) as isbn10, ut.name");
+    aryQuery.push("from booklist bl, user_t ut");
     aryQuery.push("where 1=1");
+    aryQuery.push("and bl.userid = $1");
+    aryQuery.push("and bl.userid = ut.userid");
+    aryParam.push(userid);
+
     if (req.query.q) {
         aryQuery.push("and(");
-        aryQuery.push("  bookname ilike $1");
-        aryQuery.push("  or category ilike $1");
+        aryQuery.push("  bookname ilike $2");
+        aryQuery.push("  or category ilike $2");
         aryQuery.push(")");
         aryParam.push('%' + req.query.q + '%');
     }
@@ -46,14 +72,18 @@ exports.index = function(req, res) {
 
     // 実行
     pool.query(aryQuery.join(" "), aryParam, (perr, pres) => {
+        console.log("sel error start", perr, "sel error end");
         books = pres.rows;
+        if (books.length >= 1) {
+            display.username = books[0].name;
+        }
         res.render('posts/index', {display: display, books: books, qstr: req.query.q});
     });
 };
 
 exports.new = function(req, res) {
     // 画面制御
-    const display = new Display();
+    const display = makeDisplay(req);
     display.activeNew = "active";
     display.mode = "new";
     const book = {};
@@ -85,8 +115,9 @@ exports.create = function(req, res) {
             aryQuery.push("  ,isbn13");
             aryQuery.push("  ,ebook_flg");
             aryQuery.push("  ,wish_flg");
+            aryQuery.push("  ,userid");
             aryQuery.push(") values (");
-            aryQuery.push("$1, $2, $3, $4, $5, $6");
+            aryQuery.push("$1, $2, $3, $4, $5, $6, $7");
             aryQuery.push(")");
 
             // パラメータ
@@ -97,6 +128,7 @@ exports.create = function(req, res) {
             aryParam.push(req.body.isbn13);
             aryParam.push(req.body.ebookFlg);
             aryParam.push(req.body.wishFlg);
+            aryParam.push(req.user);
         
             // クエリ実行
             await client.query(aryQuery.join(" "), aryParam);
@@ -113,7 +145,7 @@ exports.create = function(req, res) {
             client.release();
             console.log("release");
             // 一覧を再表示
-            res.redirect('/');
+            res.redirect('/home');
         }
     })();
 
@@ -122,7 +154,7 @@ exports.create = function(req, res) {
 exports.edit = function(req, res) {
 
     // 画面制御
-    const display = new Display();
+    const display = makeDisplay(req);
     display.mode = "edit";
 
     pool.query('select * from booklist where id = $1', [req.params.id], (perr, pres) => {
@@ -161,7 +193,7 @@ exports.update = function(req, res) {
     // クエリ実行
     pool.query(aryQuery.join(" "), aryParam, (perr, pres) => {
 	    // 一覧を再表示
-        res.redirect('/');
+        res.redirect('/home');
     });
 };
 
@@ -179,13 +211,13 @@ exports.delete = function(req, res) {
     // クエリ実行
     pool.query(aryQuery.join(" "), aryParam, (perr, pres) => {
 	    // 一覧を再表示
-        res.redirect('/');
+        res.redirect('/home');
     });
 };
 
 exports.doc = function(req, res) {
     // 画面制御
-    const display = new Display();
+    const display = makeDisplay(req);
     display.activeDoc = "active";
 
 	res.render('doc', {display: display});
@@ -194,7 +226,7 @@ exports.doc = function(req, res) {
 // ログイン
 exports.login = function(req, res) {
     // 画面制御
-    const display = new Display();
+    const display = makeDisplay(req);
 
 	res.render('login', {display: display});
 };
@@ -208,7 +240,7 @@ exports.logout = function(req, res) {
 // サインアップ
 exports.signup = function(req, res) {
     // 画面制御
-    const display = new Display();
+    const display = makeDisplay(req);
     //console.log("error? " + res.signuperror);
     //console.log("req", req);
     //console.log("res", res);

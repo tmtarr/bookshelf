@@ -72,7 +72,8 @@ passport.deserializeUser(function(user, done) {
 });
 
 // ルーティング設定
-app.get('/', post.index);
+app.get('/', post.main);
+app.get('/home', post.index);
 app.get('/posts/new', post.new);		// 新規作成フォームを表示
 app.post('/posts/create', post.create);	// formのpost先
 app.get('/posts/:id/edit', post.edit);	// 更新 編集フォームを表示
@@ -83,7 +84,7 @@ app.get('/login', post.login);          // ログイン
 app.get('/logout', post.logout);
 app.post('/login',
     passport.authenticate('local', {
-        successRedirect: '/',
+        successRedirect: '/home',
         failureRedirect: '/login'
     })
 );
@@ -111,7 +112,7 @@ app.post('/signup', function(req, res) {    // サインアップ処理
         } else {
             // ログイン状態でトップ画面にリダイレクト
             req.login(req.body.userid, function(err) {
-                return res.redirect('/');
+                return res.redirect('/home');
             });
         }
     });
@@ -119,6 +120,15 @@ app.post('/signup', function(req, res) {    // サインアップ処理
 
 // ajax用API
 app.get('/ndl/:isbn', post.searchNDL);		// NDL検索
+
+// ユーザー
+app.get('/:userid', post.index);
+//app.get('/:userid', function(req, res) {
+//    const viewid = req.params.userid;
+//    console.log('viewid: ' + viewid);
+//    post.index(req, res, viewid);
+//});
+
 
 app.listen(PORT);
 console.log("server starting...");
