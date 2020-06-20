@@ -49,36 +49,40 @@ exports.index = function(req, res) {
         display.activeHome = "active";
     }
 
-    // パラメータ
-    var aryParam = [];
+    (async () => {
 
-    // クエリ
-    var aryQuery = [];
-    aryQuery.push("select bl.*, chgisbn13to10(isbn13) as isbn10, ut.name");
-    aryQuery.push("from booklist bl, user_t ut");
-    aryQuery.push("where 1=1");
-    aryQuery.push("and bl.userid = $1");
-    aryQuery.push("and bl.userid = ut.userid");
-    aryParam.push(userid);
-
-    if (req.query.q) {
-        aryQuery.push("and(");
-        aryQuery.push("  bookname ilike $2");
-        aryQuery.push("  or category ilike $2");
-        aryQuery.push(")");
-        aryParam.push('%' + req.query.q + '%');
-    }
-    aryQuery.push("order by id desc");
-
-    // 実行
-    pool.query(aryQuery.join(" "), aryParam, (perr, pres) => {
-        console.log("sel error start", perr, "sel error end");
-        books = pres.rows;
-        if (books.length >= 1) {
-            display.username = books[0].name;
+        // ユーザー
+        var qres = await pool.query("select name from user_t where userid = $1", [userid]);
+        if (qres.rows.length >= 1) {
+            display.username = qres.rows[0].name;
         }
+
+        // パラメータ
+        var aryParam = [];
+
+        // クエリ
+        var aryQuery = [];
+        aryQuery.push("select bl.*, chgisbn13to10(isbn13) as isbn10, ut.name");
+        aryQuery.push("from booklist bl, user_t ut");
+        aryQuery.push("where 1=1");
+        aryQuery.push("and bl.userid = $1");
+        aryQuery.push("and bl.userid = ut.userid");
+        aryParam.push(userid);
+
+        if (req.query.q) {
+            aryQuery.push("and(");
+            aryQuery.push("  bookname ilike $2");
+            aryQuery.push("  or category ilike $2");
+            aryQuery.push(")");
+            aryParam.push('%' + req.query.q + '%');
+        }
+        aryQuery.push("order by id desc");
+
+        // 実行
+        qres = await pool.query(aryQuery.join(" "), aryParam);
+        books = qres.rows;
         res.render('posts/index', {display: display, books: books, qstr: req.query.q});
-    });
+    })();
 };
 
 exports.new = function(req, res) {
