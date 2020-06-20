@@ -9,7 +9,9 @@ create table booklist(
 	isbn13 varchar(13),
 	ebook_flg varchar(1),
 	wish_flg varchar(1),
-	userid varchar(20)
+	userid varchar(20),
+	ins_date varchar(19),
+	upd_date varchar(19)
 );
 
 -- primary key

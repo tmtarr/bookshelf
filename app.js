@@ -107,7 +107,9 @@ app.post('/signup', function(req, res) {    // サインアップ処理
     const hash = getHash(req.body.userid, req.body.password);
 
     aryQuery.push("insert into user_t values (");
-    aryQuery.push("$1, $2, $3, 0)");
+    aryQuery.push("$1, $2, $3, 0");
+    aryQuery.push(",to_char(now() at time zone 'JST', 'YYYY/MM/DD|HH24:MI:SS')");
+    aryQuery.push(")");
 
     aryParam.push(req.body.userid);
     aryParam.push(req.body.name);

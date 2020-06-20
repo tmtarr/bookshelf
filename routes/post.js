@@ -116,8 +116,10 @@ exports.create = function(req, res) {
             aryQuery.push("  ,ebook_flg");
             aryQuery.push("  ,wish_flg");
             aryQuery.push("  ,userid");
+            aryQuery.push("  ,ins_date");
             aryQuery.push(") values (");
             aryQuery.push("$1, $2, $3, $4, $5, $6, $7");
+            aryQuery.push(",to_char(now() at time zone 'JST', 'YYYY/MM/DD|HH24:MI:SS')");
             aryQuery.push(")");
 
             // パラメータ
@@ -178,6 +180,7 @@ exports.update = function(req, res) {
     aryQuery.push(",isbn13 = $3");
     aryQuery.push(",ebook_flg = $4");
     aryQuery.push(",wish_flg = $5");
+    aryQuery.push(",upd_date = to_char(now() at time zone 'JST', 'YYYY/MM/DD|HH24:MI:SS')");
     aryQuery.push("where");
     aryQuery.push("id = $6");
     
