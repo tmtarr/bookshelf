@@ -58,7 +58,7 @@ exports.index = function(req, res) {
         if (qres.rows.length >= 1) {
             display.username = qres.rows[0].name;
 
-        // ID未存在
+        // ID未存在エラー
         } else {
             if (isSelf) {
                 displayError(req, res, '自身のほんだなを見るにはログインしてください。');
@@ -125,7 +125,6 @@ exports.create = function(req, res) {
             // id取得
             const resq = await client.query("select to_char(to_number(max(id), '99999') + 1, 'FM00000') as id from booklist");
             const id = resq.rows[0].id;
-            console.log("new id: " + id);
 
             // 登録
             // クエリ
@@ -158,7 +157,6 @@ exports.create = function(req, res) {
             await client.query(aryQuery.join(" "), aryParam);
 
             await client.query('commit');
-            console.log("commit");
 
         } catch(e) {
             await client.query('rollback');
@@ -167,7 +165,6 @@ exports.create = function(req, res) {
 
         } finally {
             client.release();
-            console.log("release");
             // 一覧を再表示
             res.redirect('/home');
         }
@@ -266,10 +263,6 @@ exports.logout = function(req, res) {
 exports.signup = function(req, res) {
     // 画面制御
     const display = makeDisplay(req);
-    //console.log("error? " + res.signuperror);
-    //console.log("req", req);
-    //console.log("res", res);
-
 	res.render('signup', {display: display});
 };
 
