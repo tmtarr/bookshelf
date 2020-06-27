@@ -38,6 +38,7 @@ exports.index = function(req, res) {
 
     // 画面制御
     const display = makeDisplay(req);
+    let isSelf = false;
 
     // 検索対象のuseridを決定
     var userid;
@@ -45,6 +46,7 @@ exports.index = function(req, res) {
         userid = req.params.userid;     // 他人のを参照
     } else {
         display.editable = true;
+        isSelf = true;
         userid = display.userid;        // 自分のを編集
         display.activeHome = "active";
     }
@@ -55,6 +57,16 @@ exports.index = function(req, res) {
         var qres = await pool.query("select name from user_t where userid = $1", [userid]);
         if (qres.rows.length >= 1) {
             display.username = qres.rows[0].name;
+
+        // ID未存在
+        } else {
+            if (isSelf) {
+                displayError(req, res, '自身のほんだなを見るにはログインしてください。');
+                return;
+            } else {
+                displayError(req, res, 'ユーザー ' + userid + ' は存在しません。');
+                return;
+            }
         }
 
         // パラメータ
@@ -92,6 +104,12 @@ exports.new = function(req, res) {
     display.mode = "new";
     const book = {};
     book.isbn13 = req.query.isbn;
+
+    // エラーチェック
+    if (!display.login) {
+        displayError(req, res, '本を登録するにはログインしてください。');
+        return;
+    }
 
 	res.render('posts/edit', {display: display, book: book});
 };
@@ -288,3 +306,9 @@ exports.searchNDL = function(req, res) {
         	res.json(record);
         });
 };
+
+// エラー画面
+function displayError(req, res, message) {
+    const display = makeDisplay(req);
+	res.render('error', {display: display, message: message});
+}
