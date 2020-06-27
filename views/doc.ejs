@@ -4,15 +4,16 @@
         <h4 class="title">登録補助ツール</h4>
         AmazonからISBN情報を取得するブックマークレットです。<br><br>
 
-        <h5>つかいかた</h5>
-        1. 以下URLをブックマークレットとしてブラウザに登録してください。（初回のみ）<br><br>
+        <h5>事前準備</h5>
+        以下URLをブックマークレットとしてブラウザに登録してください。<br><br>
         <a href='javascript:(function(){const u=location.href;const m=u.match(/\/dp\/([0-9]+)/);if(m){window.open("https://intense-temple-32472.herokuapp.com/posts/new?isbn="+m[1]);}})();'>本を登録</a><br>
-        <a href='javascript:(function(){const u=location.href;const m=u.match(/\/dp\/([0-9]+)/);if(m){window.open("http://localhost:5000/posts/new?isbn="+m[1]);}})();'>本を登録(local)</a> ※開発用<br><br>
+        <a href='javascript:(function(){const u=location.href;const m=u.match(/\/dp\/([0-9]+)/);if(m){window.open("http://localhost:5000/posts/new?isbn="+m[1]);}})();'>本を登録(local)</a> ※開発用<br><br><br>
         
-        2. アプリにログインします。<br><br>
-        3. Amazonで、登録したい本のページを開き、ブックマークレットを実行します。<br>
+        <h5>つかいかた</h5>
+        1. アプリにログインします。<br><br>
+        2. Amazonで、登録したい本のページを開き、ブックマークレットを実行します。<br>
         　※紙の本のページで実行してください。kindleページは未対応です。<br><br>
-        4. ISBNが設定された状態で登録ページが開きます。<br>
+        3. ISBNが設定された状態で登録ページが開きます。<br>
       </p>
     </div>
 <%- include('footer'); -%>
