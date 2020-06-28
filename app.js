@@ -45,7 +45,7 @@ const getHash = function(id, password) {
 passport.use(new LocalStrategy(
     function(username, password, done) {
         //return done(null, "hello");
-        console.log("にんしょうちゅう");
+        //console.log("にんしょうちゅう");
         //console.log(getHash(username, password));
         const hash = getHash(username, password);
 
@@ -61,7 +61,7 @@ passport.use(new LocalStrategy(
         aryParam.push(hash);
     
         pool.query(aryQuery.join(" "), aryParam, (perr, pres) => {
-            console.log(pres.rowCount);
+            //console.log(pres.rowCount);
             if (pres.rowCount == 0) {
                 return done(null, false, {message: 'ちがうよ'});
             }
@@ -146,7 +146,6 @@ app.get('/:userid', post.index);
 //    console.log('viewid: ' + viewid);
 //    post.index(req, res, viewid);
 //});
-
 
 app.listen(PORT);
 console.log("server starting...");
