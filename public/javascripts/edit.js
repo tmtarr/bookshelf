@@ -1,3 +1,6 @@
+// フォーカス
+document.getElementById("isbn13").focus();
+
 // イベント設定
 document.getElementById("isbn13").addEventListener('blur', blurISBN);
 document.getElementById("btnGet").addEventListener('click', clickGetButton);
