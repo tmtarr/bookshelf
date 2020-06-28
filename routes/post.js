@@ -1,6 +1,5 @@
 // DB接続
 const pool = require('../modules/dbpool');
-let books;
 
 // NDL
 const fetch = require('node-fetch');
@@ -25,7 +24,7 @@ function makeDisplay(req) {
     return display;
 }
 
-// メイン
+// メイン画面を起動
 exports.main = function(req, res) {
 
     // 画面制御
@@ -33,7 +32,7 @@ exports.main = function(req, res) {
     res.render('main', {display: display});
 }
 
-// 一覧取得
+// 一覧画面を起動
 exports.index = function(req, res) {
 
     // 画面制御
@@ -41,7 +40,7 @@ exports.index = function(req, res) {
     let isSelf = false;
 
     // 検索対象のuseridを決定
-    var userid;
+    let userid;
     if (req.params.userid) {
         userid = req.params.userid;     // 他人のを参照
     } else {
@@ -51,52 +50,67 @@ exports.index = function(req, res) {
         display.activeHome = "active";
     }
 
+    // データ取得
     (async () => {
-
-        // ユーザー
-        var qres = await pool.query("select name from user_t where userid = $1", [userid]);
-        if (qres.rows.length >= 1) {
-            display.username = qres.rows[0].name;
-
-        // ID未存在エラー
-        } else {
-            if (isSelf) {
-                displayError(req, res, '自身のほんだなを見るにはログインしてください。');
-                return;
-            } else {
-                displayError(req, res, 'ユーザー ' + userid + ' は存在しません。');
-                return;
-            }
+        // ユーザー名取得
+        display.username = await getUserName(req, res, userid, isSelf);
+        if (!display.username) {
+            return;
         }
 
-        // パラメータ
-        var aryParam = [];
-
-        // クエリ
-        var aryQuery = [];
-        aryQuery.push("select bl.*, chgisbn13to10(isbn13) as isbn10, ut.name");
-        aryQuery.push("from booklist bl, user_t ut");
-        aryQuery.push("where 1=1");
-        aryQuery.push("and bl.userid = $1");
-        aryQuery.push("and bl.userid = ut.userid");
-        aryParam.push(userid);
-
-        if (req.query.q) {
-            aryQuery.push("and(");
-            aryQuery.push("  bookname ilike $2");
-            aryQuery.push("  or category ilike $2");
-            aryQuery.push(")");
-            aryParam.push('%' + req.query.q + '%');
-        }
-        aryQuery.push("order by id desc");
-
-        // 実行
-        qres = await pool.query(aryQuery.join(" "), aryParam);
-        books = qres.rows;
+        // 書籍リスト取得
+        const books = await getBooklist(req, userid);
         res.render('posts/index', {display: display, books: books, qstr: req.query.q});
     })();
 };
 
+// ユーザー名取得
+async function getUserName(req, res, userid, isSelf) {
+
+    let username;
+    const qres = await pool.query("select name from user_t where userid = $1", [userid]);
+    if (qres.rows.length >= 1) {
+        username = qres.rows[0].name;
+    } else {
+        if (isSelf) {
+            displayError(req, res, '自身のほんだなを見るにはログインしてください。');
+        } else {
+            displayError(req, res, 'ユーザー ' + userid + ' は存在しません。');
+        }
+    }
+    return username;
+}
+
+// 書籍リストを取得
+async function getBooklist(req, userid) {
+
+    // パラメータ
+    const aryParam = [];
+
+    // クエリ
+    const aryQuery = [];
+    aryQuery.push("select bl.*, chgisbn13to10(isbn13) as isbn10, ut.name");
+    aryQuery.push("from booklist bl, user_t ut");
+    aryQuery.push("where 1=1");
+    aryQuery.push("and bl.userid = $1");
+    aryQuery.push("and bl.userid = ut.userid");
+    aryParam.push(userid);
+
+    if (req.query.q) {
+        aryQuery.push("and(");
+        aryQuery.push("  bookname ilike $2");
+        aryQuery.push("  or category ilike $2");
+        aryQuery.push(")");
+        aryParam.push('%' + req.query.q + '%');
+    }
+    aryQuery.push("order by id desc");
+
+    // 実行
+    const res = await pool.query(aryQuery.join(" "), aryParam);
+    return res.rows;
+}
+
+// 新規登録画面を起動
 exports.new = function(req, res) {
     // 画面制御
     const display = makeDisplay(req);
@@ -114,7 +128,7 @@ exports.new = function(req, res) {
 	res.render('posts/edit', {display: display, book: book});
 };
 
-// 登録
+// 書籍登録処理
 exports.create = function(req, res) {
 
     (async () => {
@@ -126,36 +140,8 @@ exports.create = function(req, res) {
             const resq = await client.query("select to_char(to_number(max(id), '99999') + 1, 'FM00000') as id from booklist");
             const id = resq.rows[0].id;
 
-            // 登録
-            // クエリ
-            var aryQuery = [];
-            aryQuery.push("insert into booklist(");
-            aryQuery.push("  id");
-            aryQuery.push("  ,bookname");
-            aryQuery.push("  ,category");
-            aryQuery.push("  ,isbn13");
-            aryQuery.push("  ,ebook_flg");
-            aryQuery.push("  ,wish_flg");
-            aryQuery.push("  ,userid");
-            aryQuery.push("  ,ins_date");
-            aryQuery.push(") values (");
-            aryQuery.push("$1, $2, $3, $4, $5, $6, $7");
-            aryQuery.push(",to_char(now() at time zone 'JST', 'YYYY/MM/DD|HH24:MI:SS')");
-            aryQuery.push(")");
-
-            // パラメータ
-            var aryParam = [];
-            aryParam.push(id);
-            aryParam.push(req.body.name);
-            aryParam.push(req.body.category);
-            aryParam.push(req.body.isbn13);
-            aryParam.push(req.body.ebookFlg);
-            aryParam.push(req.body.wishFlg);
-            aryParam.push(req.user);
-        
-            // クエリ実行
-            await client.query(aryQuery.join(" "), aryParam);
-
+            // 書籍情報を登録
+            await insBook(client, req, id);
             await client.query('commit');
 
         } catch(e) {
@@ -169,9 +155,41 @@ exports.create = function(req, res) {
             res.redirect('/home');
         }
     })();
-
 };
 
+// 書籍情報を登録する
+async function insBook(client, req, id) {
+    // クエリ
+    const aryQuery = [];
+    aryQuery.push("insert into booklist(");
+    aryQuery.push("  id");
+    aryQuery.push("  ,bookname");
+    aryQuery.push("  ,category");
+    aryQuery.push("  ,isbn13");
+    aryQuery.push("  ,ebook_flg");
+    aryQuery.push("  ,wish_flg");
+    aryQuery.push("  ,userid");
+    aryQuery.push("  ,ins_date");
+    aryQuery.push(") values (");
+    aryQuery.push("$1, $2, $3, $4, $5, $6, $7");
+    aryQuery.push(",to_char(now() at time zone 'JST', 'YYYY/MM/DD|HH24:MI:SS')");
+    aryQuery.push(")");
+
+    // パラメータ
+    const aryParam = [];
+    aryParam.push(id);
+    aryParam.push(req.body.name);
+    aryParam.push(req.body.category);
+    aryParam.push(req.body.isbn13);
+    aryParam.push(req.body.ebookFlg);
+    aryParam.push(req.body.wishFlg);
+    aryParam.push(req.user);
+
+    // クエリ実行
+    return await client.query(aryQuery.join(" "), aryParam);
+}
+
+// 編集画面を起動
 exports.edit = function(req, res) {
 
     // 画面制御
@@ -186,12 +204,12 @@ exports.edit = function(req, res) {
     });
 };
 
-// 更新
+// 更新処理
 exports.update = function(req, res) {
 
     // 更新
     // クエリ
-    var aryQuery = [];
+    const aryQuery = [];
     aryQuery.push("update booklist");
     aryQuery.push("set");
     aryQuery.push("bookname = $1");
@@ -204,7 +222,7 @@ exports.update = function(req, res) {
     aryQuery.push("id = $6");
     
     // パラメータ
-    var aryParam = [];
+    const aryParam = [];
     aryParam.push(req.body.name);
     aryParam.push(req.body.category);
     aryParam.push(req.body.isbn13);
@@ -223,11 +241,11 @@ exports.delete = function(req, res) {
 
     // 削除
     // クエリ
-    var aryQuery = [];
+    const aryQuery = [];
     aryQuery.push("delete from booklist where id = $1;");
     
     // パラメータ
-    var aryParam = [];
+    const aryParam = [];
     aryParam.push(req.params.id);
 
     // クエリ実行
@@ -237,6 +255,7 @@ exports.delete = function(req, res) {
     });
 };
 
+// ドキュメント画面を起動
 exports.doc = function(req, res) {
     // 画面制御
     const display = makeDisplay(req);
@@ -245,7 +264,7 @@ exports.doc = function(req, res) {
 	res.render('doc', {display: display});
 };
 
-// ログイン
+// ログイン画面を起動
 exports.login = function(req, res) {
     // 画面制御
     const display = makeDisplay(req);
@@ -259,7 +278,7 @@ exports.logout = function(req, res) {
     res.redirect('/');
 }
 
-// サインアップ
+// サインアップ画面を起動
 exports.signup = function(req, res) {
     // 画面制御
     const display = makeDisplay(req);
