@@ -27,7 +27,11 @@ app.use(express.urlencoded({extended: true}));
 app.use(methodOverride('_method'));
 
 // 認証
-app.use(session({ secret: "nazo" }));
+app.use(session({
+    secret: "nazo",
+    resave: false,
+    saveUninitialized: false
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 
