@@ -92,21 +92,22 @@ async function getBooklist(req, userid) {
     aryQuery.push("select bl.*, chgisbn13to10(isbn13) as isbn10, ut.name");
     aryQuery.push("from booklist bl, user_t ut");
     aryQuery.push("where 1=1");
-    aryQuery.push("and bl.userid = $1");
+    aryQuery.push("and bl.userid = ?");
     aryQuery.push("and bl.userid = ut.userid");
     aryParam.push(userid);
 
     if (req.query.q) {
         aryQuery.push("and(");
-        aryQuery.push("  bookname ilike $2");
-        aryQuery.push("  or category ilike $2");
+        aryQuery.push("  bookname ilike ?");
+        aryQuery.push("  or category ilike ?");
         aryQuery.push(")");
+        aryParam.push('%' + req.query.q + '%');
         aryParam.push('%' + req.query.q + '%');
     }
     aryQuery.push("order by id desc");
 
     // 実行
-    const res = await pool.query(aryQuery.join(" "), aryParam);
+    const res = await pool.query(numberQueryParameters(aryQuery.join(" ")), aryParam);
     return res.rows;
 }
 
@@ -323,4 +324,19 @@ exports.searchNDL = function(req, res) {
 function displayError(req, res, message) {
     const display = makeDisplay(req);
 	res.render('error', {display: display, message: message});
+}
+
+// クエリパラメータを置換
+function numberQueryParameters(strIn) {
+
+	var count = 1;
+	var strOut = strIn;
+
+	var re = /\?/;
+	while (re.test(strOut)) {
+		strOut = strOut.replace(re, "$" + count);
+		count++;
+	}
+
+	return strOut;
 }
