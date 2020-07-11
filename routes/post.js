@@ -62,7 +62,7 @@ exports.index = function(req, res) {
         const books = await getBooklist(req, userid);
         req.query.ebookFlg = req.query.ebookFlg == 1 ? "checked" : "";
         req.query.wishFlg = req.query.wishFlg == 1 ? "checked" : "";
-        res.render('posts/index', {display: display, books: books, qstr: req.query.q, reqq: req.query});
+        res.render('posts/index', {display: display, books: books, reqq: req.query});
     })();
 };
 

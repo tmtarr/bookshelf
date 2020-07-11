@@ -1,5 +1,4 @@
 <%
-  if (typeof qstr === 'undefined') { var qstr = ""; }
   if (typeof reqq === 'undefined') { var reqq = {}; }
 %>
 
@@ -28,7 +27,7 @@
             <a class="nav-item nav-link <%= display.activeDoc %>" href="/doc">Doc</a>
           </div>
           <form id="search_simple" class="form-inline my-2 my-lg-0 ml-5" method="GET">
-            <input class="form-control" type="search" placeholder="Search" aria-label="Search" name="q" value="<%= qstr %>">
+            <input class="form-control" type="search" placeholder="Search" aria-label="Search" name="q" value="<%= reqq.q %>">
           </form>
 
           <div class="dropdown">
