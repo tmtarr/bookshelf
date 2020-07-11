@@ -60,7 +60,9 @@ exports.index = function(req, res) {
 
         // 書籍リスト取得
         const books = await getBooklist(req, userid);
-        res.render('posts/index', {display: display, books: books, qstr: req.query.q});
+        req.query.ebookFlg = req.query.ebookFlg == 1 ? "checked" : "";
+        req.query.wishFlg = req.query.wishFlg == 1 ? "checked" : "";
+        res.render('posts/index', {display: display, books: books, qstr: req.query.q, reqq: req.query});
     })();
 };
 
@@ -96,6 +98,8 @@ async function getBooklist(req, userid) {
     aryQuery.push("and bl.userid = ut.userid");
     aryParam.push(userid);
 
+    // 検索条件
+    // 簡易検索
     if (req.query.q) {
         aryQuery.push("and(");
         aryQuery.push("  bookname ilike ?");
@@ -104,6 +108,25 @@ async function getBooklist(req, userid) {
         aryParam.push('%' + req.query.q + '%');
         aryParam.push('%' + req.query.q + '%');
     }
+    // name
+    if (req.query.name) {
+        aryQuery.push("  and bookname ilike ?");
+        aryParam.push('%' + req.query.name + '%');
+    }
+    // category
+    if (req.query.category) {
+        aryQuery.push("  and category ilike ?");
+        aryParam.push('%' + req.query.category + '%');
+    }
+    // 電子書籍
+    if (req.query.ebookFlg == 1) {
+        aryQuery.push("  and ebook_flg = '1'");
+    }
+    // ほしい
+    if (req.query.wishFlg == 1) {
+        aryQuery.push("  and wish_flg = '1'");
+    }
+
     aryQuery.push("order by id desc");
 
     // 実行

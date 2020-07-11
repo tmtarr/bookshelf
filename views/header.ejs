@@ -1,5 +1,6 @@
 <%
   if (typeof qstr === 'undefined') { var qstr = ""; }
+  if (typeof reqq === 'undefined') { var reqq = {}; }
 %>
 
 <!DOCTYPE html>
@@ -29,37 +30,36 @@
           <form id="search_simple" class="form-inline my-2 my-lg-0 ml-5" method="GET">
             <input class="form-control" type="search" placeholder="Search" aria-label="Search" name="q" value="<%= qstr %>">
           </form>
-<!--
-            <div class="dropdown">
-              <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              </button>
-              <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+
+          <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            </button>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu2">
+              <form class="px-4 py-3" style="width:300px;">
                 <div class="form-group">
-                  <label for="exampleDropdownFormEmail1">name</label>
-                  <input type="email" class="form-control" id="exampleDropdownFormEmail1">
+                  <label for="name">name</label>
+                  <input type="text" class="form-control" id="name" name="name" value="<%= reqq.name %>">
                 </div>
                 <div class="form-group">
-                  <label for="exampleDropdownFormEmail1">category</label>
-                  <input type="email" class="form-control" id="exampleDropdownFormEmail1">
+                  <label for="category">category</label>
+                  <input type="text" class="form-control" id="category" name="category" value="<%= reqq.category %>">
                 </div>
-                <div class="form-check">
-                  <input type="checkbox" class="form-check-input" id="dropdownCheck">
-                  <label class="form-check-label" for="dropdownCheck">
-                    Remember me
-                  </label>
+                <div class="mb-3">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" name="ebookFlg" value="1" <%= reqq.ebookFlg %>>
+                    <label class="form-check-label" for="inlineCheckbox1">電子書籍</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" name="wishFlg" value="1" <%= reqq.wishFlg %>>
+                    <label class="form-check-label" for="inlineCheckbox2">ほしい</label>
+                  </div>
                 </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="inlineCheckbox1" name="ebookFlg" value="1">
-                  <label class="form-check-label" for="inlineCheckbox1">電子書籍</label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="inlineCheckbox2" name="wishFlg" value="1">
-                  <label class="form-check-label" for="inlineCheckbox2">ほしい</label>
-                </div>
+    
+
                 <button type="submit" class="btn btn-success">Search</button>
-              </div>
+              </form>
             </div>
--->
+          </div>
 
           <button class="btn btn-outline-success my-2 my-sm-0 ml-2" type="submit" form="search_simple">Search</button>
           
