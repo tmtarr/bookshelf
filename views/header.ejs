@@ -42,7 +42,8 @@
                 </div>
                 <div class="form-group">
                   <label for="category">category</label>
-                  <input type="text" class="form-control" id="category" name="category" value="<%= reqq.category %>">
+                  <input type="text" list="registered_category" class="form-control custom-select" id="category" name="category" value="<%= reqq.category %>">
+                  <%- include('category'); -%>
                 </div>
                 <div class="mb-3">
                   <div class="form-check form-check-inline">
