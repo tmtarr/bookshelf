@@ -81,27 +81,35 @@ function setData() {
 // OpenBDから取得したデータをフォームに設定
 function setOpenBDData(record, force) {
 
+//    // google取得のテスト用デバッグコード
+//    return false;
+
     // 存在チェック
     if (!record) {
         return false;
     }
 
+    console.log('get book data from OpenBD');
     console.log(record.summary);
 
     // 取得データ設定
     if (force || !document.getElementById("name").value) {
         document.getElementById("name").value = record.summary.title;
+        document.getElementById("publisher").value = record.summary.publisher;
+        document.getElementById("author").value = record.summary.author;
     }
     return true;
 }
 
 function setGoogleBooksData() {
-//    var record = this.response.items[0]; 
-//    console.log(this.response);
 
     if (this.response.totalItems > 0) {
         var record = this.response.items[0]; 
+        console.log('get book data from GoogleBooksAPI');
+        console.log(this.response);
         document.getElementById("name").value = record.volumeInfo.title;
+        document.getElementById("publisher").value = record.volumeInfo.publisher || "";
+        document.getElementById("author").value = record.volumeInfo.authors[0];
     }
 
     // load完了
@@ -109,12 +117,15 @@ function setGoogleBooksData() {
 }
 
 function setNDLData() {
+    console.log('get book data from NDL');
     console.log(this.response);
     if (this.response) {
         var record = this.response;
         if (record.recordData) {
             console.log(record.recordData.srw_dc);
             document.getElementById("name").value = record.recordData.srw_dc.title._text;
+            document.getElementById("publisher").value = record.recordData.srw_dc.publisher._text;
+            document.getElementById("author").value = record.recordData.srw_dc.creator._text;
         }
     }
     
