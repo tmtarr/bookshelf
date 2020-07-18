@@ -188,14 +188,18 @@ async function insBook(client, req, id) {
     aryQuery.push("insert into booklist(");
     aryQuery.push("  id");
     aryQuery.push("  ,bookname");
+    aryQuery.push("  ,author");
+    aryQuery.push("  ,publisher");
     aryQuery.push("  ,category");
+    aryQuery.push("  ,read_date");
+    aryQuery.push("  ,note");
     aryQuery.push("  ,isbn13");
     aryQuery.push("  ,ebook_flg");
     aryQuery.push("  ,wish_flg");
     aryQuery.push("  ,userid");
     aryQuery.push("  ,ins_date");
     aryQuery.push(") values (");
-    aryQuery.push("$1, $2, $3, $4, $5, $6, $7");
+    aryQuery.push("$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11");
     aryQuery.push(",to_char(now() at time zone 'JST', 'YYYY/MM/DD|HH24:MI:SS')");
     aryQuery.push(")");
 
@@ -203,7 +207,11 @@ async function insBook(client, req, id) {
     const aryParam = [];
     aryParam.push(id);
     aryParam.push(req.body.name);
+    aryParam.push(req.body.author);
+    aryParam.push(req.body.publisher);
     aryParam.push(req.body.category);
+    aryParam.push(req.body.read_date);
+    aryParam.push(req.body.note);
     aryParam.push(req.body.isbn13);
     aryParam.push(req.body.ebookFlg);
     aryParam.push(req.body.wishFlg);
@@ -237,18 +245,26 @@ exports.update = function(req, res) {
     aryQuery.push("update booklist");
     aryQuery.push("set");
     aryQuery.push("bookname = $1");
-    aryQuery.push(",category = $2");
-    aryQuery.push(",isbn13 = $3");
-    aryQuery.push(",ebook_flg = $4");
-    aryQuery.push(",wish_flg = $5");
+    aryQuery.push(",author = $2");
+    aryQuery.push(",publisher = $3");
+    aryQuery.push(",category = $4");
+    aryQuery.push(",read_date = $5");
+    aryQuery.push(",note = $6");
+    aryQuery.push(",isbn13 = $7");
+    aryQuery.push(",ebook_flg = $8");
+    aryQuery.push(",wish_flg = $9");
     aryQuery.push(",upd_date = to_char(now() at time zone 'JST', 'YYYY/MM/DD|HH24:MI:SS')");
     aryQuery.push("where");
-    aryQuery.push("id = $6");
+    aryQuery.push("id = $10");
     
     // パラメータ
     const aryParam = [];
     aryParam.push(req.body.name);
+    aryParam.push(req.body.author);
+    aryParam.push(req.body.publisher);
     aryParam.push(req.body.category);
+    aryParam.push(req.body.read_date);
+    aryParam.push(req.body.note);
     aryParam.push(req.body.isbn13);
     aryParam.push(req.body.ebookFlg);
     aryParam.push(req.body.wishFlg);

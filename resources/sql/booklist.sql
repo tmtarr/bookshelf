@@ -11,7 +11,9 @@ create table booklist(
 	wish_flg varchar(1),
 	userid varchar(20),
 	ins_date varchar(19),
-	upd_date varchar(19)
+	upd_date varchar(19),
+	publisher varchar(50),
+	read_date varchar(10)
 );
 
 -- primary key
