@@ -100,16 +100,16 @@ app.post('/login',
 app.get('/signup', post.signup);        // サインアップ画面
 app.post('/signup', post.addUser);      // サインアップ処理
 
- // ajax用API
-app.get('/ndl/:isbn', api.searchNDL);		// NDL検索
-
-// ユーザー
-app.get('/:userid', post.index);
+app.get('/:userid', post.index);        // ユーザーのほんだな参照
 //app.get('/:userid', function(req, res) {
 //    const viewid = req.params.userid;
 //    console.log('viewid: ' + viewid);
 //    post.index(req, res, viewid);
 //});
+
+ // ajax用API
+ app.get('/api/ndl/:isbn', api.searchNDL);		// NDL検索
+
 
 app.listen(PORT);
 console.log("server starting...");

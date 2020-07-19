@@ -116,7 +116,7 @@ function callNDL(isbn13, listener) {
     }
     var oReq = new XMLHttpRequest();
     oReq.addEventListener("load", listener);
-    oReq.open("GET", "/ndl/" + isbn13);
+    oReq.open("GET", "/api/ndl/" + isbn13);
     oReq.responseType = 'json';
     oReq.send();
     return true;
