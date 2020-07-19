@@ -1,5 +1,5 @@
 // 変数定義
-var express = require('express'),
+const express = require('express'),
 	methodOverride = require('method-override'),
 	app = express(),
 	post = require('./routes/post'),
