@@ -74,14 +74,6 @@ function calcISBN13(inIsbn) {
     return isbn13;
 }
 
-//function reqListener() {
-////    console.log(this.responseText);
-////    console.log(this.responseText[0]);
-//    // jsonはテキストで来ているからparse処理が必要？→requestでresponseTypeを指定すれば不要みたい
-//
-//    // this.response にjsonがparseされた状態でセットされる
-//    console.log(this.response[0].summary);
-//}
 function callOpenBD(isbn13, listener) {
     if (isbn13.length != 13) {
         return false;

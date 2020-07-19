@@ -39,9 +39,6 @@ app.use(passport.session());
 // パスワードチェックのロジック
 passport.use(new LocalStrategy(
     function(username, password, done) {
-        //return done(null, "hello");
-        //console.log("にんしょうちゅう");
-        //console.log(getHash(username, password));
         const hash = hashgen.getHash(username, password);
 
         // 認証
@@ -52,21 +49,14 @@ passport.use(new LocalStrategy(
     
         var aryParam = [];
         aryParam.push(username);
-        //aryParam.push(password);
         aryParam.push(hash);
     
         pool.query(aryQuery.join(" "), aryParam, (perr, pres) => {
-            //console.log(pres.rowCount);
             if (pres.rowCount == 0) {
                 return done(null, false, {message: 'ちがうよ'});
             }
             return done(null, username);
         });
-
-//        if (password != "fish") {
-//            return done(null, false, {message: 'ちがうよ'});
-//        }
-//        return done(null, username);
     }
 ));
 

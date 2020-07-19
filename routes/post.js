@@ -360,8 +360,6 @@ exports.addUser = function(req, res) {
             const display = {};
             display.error = true;
             res.render('signup', {display: display});
-            //【TODO】redirect時に値を渡すことはできないか？の調査がしたい
-            //res.redirect('/signup');
         } else {
             // ログイン状態でトップ画面にリダイレクト
             req.login(req.body.userid, function(err) {
