@@ -125,7 +125,9 @@ function setNDLData() {
             console.log(record.recordData.srw_dc);
             document.getElementById("name").value = record.recordData.srw_dc.title._text;
             document.getElementById("publisher").value = record.recordData.srw_dc.publisher._text;
-            document.getElementById("author").value = record.recordData.srw_dc.creator._text;
+            if (record.recordData.srw_dc.creator) {
+                document.getElementById("author").value = record.recordData.srw_dc.creator._text;
+            }
         }
     }
     
