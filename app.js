@@ -3,6 +3,7 @@ var express = require('express'),
 	methodOverride = require('method-override'),
 	app = express(),
 	post = require('./routes/post'),
+	api = require('./routes/api'),
 	passport = require('passport'),
 	LocalStrategy = require('passport-local').Strategy,
     session = require('express-session'),
@@ -100,7 +101,7 @@ app.get('/signup', post.signup);        // サインアップ画面
 app.post('/signup', post.addUser);      // サインアップ処理
 
  // ajax用API
-app.get('/ndl/:isbn', post.searchNDL);		// NDL検索
+app.get('/ndl/:isbn', api.searchNDL);		// NDL検索
 
 // ユーザー
 app.get('/:userid', post.index);
