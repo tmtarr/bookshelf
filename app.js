@@ -6,8 +6,7 @@ var express = require('express'),
 	passport = require('passport'),
 	LocalStrategy = require('passport-local').Strategy,
     session = require('express-session'),
-    pool = require('./modules/dbpool'),
-    crypto = require('crypto')
+    pool = require('./modules/dbpool')
 	;
 
 const PORT = process.env.PORT || 5000;
@@ -34,12 +33,6 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-
-// ハッシュ
-const getHash = function(id, password) {
-    const hash = crypto.scryptSync(id + password, 'yakisoba', 10).toString("base64");
-    return hash;
-}
 
 // パスワードチェックのロジック
 passport.use(new LocalStrategy(
@@ -102,41 +95,10 @@ app.post('/login',
         failureRedirect: '/login'
     })
 );
-app.get('/signup', post.signup);            // サインアップ画面
-app.post('/signup', function(req, res) {    // サインアップ処理
+app.get('/signup', post.signup);        // サインアップ画面
+app.post('/signup', post.addUser);      // サインアップ処理
 
-    // 登録
-    var aryParam = [];
-    var aryQuery = [];
-    const hash = getHash(req.body.userid, req.body.password);
-
-    aryQuery.push("insert into user_t values (");
-    aryQuery.push("$1, $2, $3, 0");
-    aryQuery.push(",to_char(now() at time zone 'JST', 'YYYY/MM/DD|HH24:MI:SS')");
-    aryQuery.push(")");
-
-    aryParam.push(req.body.userid);
-    aryParam.push(req.body.name);
-    //aryParam.push(req.body.password);
-    aryParam.push(hash);
-
-    pool.query(aryQuery.join(" "), aryParam, (perr, pres) => {
-        if (perr) {
-            const display = {};
-            display.error = true;
-            res.render('signup', {display: display});
-            //【TODO】redirect時に値を渡すことはできないか？の調査がしたい
-            //res.redirect('/signup');
-        } else {
-            // ログイン状態でトップ画面にリダイレクト
-            req.login(req.body.userid, function(err) {
-                return res.redirect('/home');
-            });
-        }
-    });
-});
-
-// ajax用API
+ // ajax用API
 app.get('/ndl/:isbn', post.searchNDL);		// NDL検索
 
 // ユーザー

@@ -5,6 +5,8 @@ const pool = require('../modules/dbpool');
 const fetch = require('node-fetch');
 const convert = require('xml-js');
 
+const crypto = require('crypto');
+
 // 画面制御オブジェクトのコンストラクタ
 function Display() {
     this.activeHome = "";
@@ -325,9 +327,47 @@ exports.signup = function(req, res) {
 	res.render('signup', {display: display});
 };
 
+// サインアップ処理
+exports.addUser = function(req, res) {
+    // 登録
+    var aryParam = [];
+    var aryQuery = [];
+    const hash = getHash(req.body.userid, req.body.password);
+
+    aryQuery.push("insert into user_t values (");
+    aryQuery.push("$1, $2, $3, 0");
+    aryQuery.push(",to_char(now() at time zone 'JST', 'YYYY/MM/DD|HH24:MI:SS')");
+    aryQuery.push(")");
+
+    aryParam.push(req.body.userid);
+    aryParam.push(req.body.name);
+    //aryParam.push(req.body.password);
+    aryParam.push(hash);
+
+    pool.query(aryQuery.join(" "), aryParam, (perr, pres) => {
+        if (perr) {
+            const display = {};
+            display.error = true;
+            res.render('signup', {display: display});
+            //【TODO】redirect時に値を渡すことはできないか？の調査がしたい
+            //res.redirect('/signup');
+        } else {
+            // ログイン状態でトップ画面にリダイレクト
+            req.login(req.body.userid, function(err) {
+                return res.redirect('/home');
+            });
+        }
+    });
+};
+
+// ハッシュ
+const getHash = function(id, password) {
+    const hash = crypto.scryptSync(id + password, 'yakisoba', 10).toString("base64");
+    return hash;
+}
+
 // NDLから情報を取得し、json形式でレスポンスを返す
 // ajaxを利用してのアクセスを想定
-// 【TODO】一定時間待ち続けた場合タイムアウトさせたい
 exports.searchNDL = function(req, res) {
     // console.log(req.params.isbn);   // 入力ISBNチェック用
 
