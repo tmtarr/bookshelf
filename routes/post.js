@@ -153,6 +153,7 @@ exports.create = function(req, res) {
 
     (async () => {
         const client = await pool.connect();
+        let blnError = false;
         try {
             await client.query('begin');
 
@@ -168,9 +169,17 @@ exports.create = function(req, res) {
             await client.query('rollback');
             console.log("rollback");
             console.log(e);
+            blnError = true;
 
         } finally {
             client.release();
+
+            // エラー処理
+            if (blnError) {
+                displayError(req, res, '登録処理でエラーが発生しました。');
+                return;
+            }
+
             // 一覧を再表示
             res.redirect('/home');
         }
@@ -268,7 +277,15 @@ exports.update = function(req, res) {
 
     // クエリ実行
     pool.query(aryQuery.join(" "), aryParam, (perr, pres) => {
-	    // 一覧を再表示
+
+        // エラー処理
+        if (perr) {
+            console.log(perr.stack);
+            displayError(req, res, '更新処理でエラーが発生しました。');
+            return;
+        }
+
+        // 一覧を再表示
         res.redirect('/home');
     });
 };
