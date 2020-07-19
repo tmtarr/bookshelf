@@ -1,4 +1,4 @@
-// 変数定義
+// モジュール
 const express = require('express'),
 	methodOverride = require('method-override'),
 	app = express(),
@@ -60,9 +60,7 @@ passport.use(new LocalStrategy(
     }
 ));
 
-// 【TODO】こちらは何をしているのかよくわかっていない
-// キーワードは「シリアライズ」かな？
-// express-sessionについて先に学んだほうがいいかもしれない
+// ユーザー情報をセッション情報に格納する際のシリアライズ／取得する際のデシリアライズ
 passport.serializeUser(function(user, done) {
     done(null, user);
 });
