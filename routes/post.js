@@ -5,7 +5,7 @@ const pool = require('../modules/dbpool');
 const fetch = require('node-fetch');
 const convert = require('xml-js');
 
-const crypto = require('crypto');
+const hashgen = require('../modules/hashgen');
 
 // 画面制御オブジェクトのコンストラクタ
 function Display() {
@@ -332,7 +332,7 @@ exports.addUser = function(req, res) {
     // 登録
     var aryParam = [];
     var aryQuery = [];
-    const hash = getHash(req.body.userid, req.body.password);
+    const hash = hashgen.getHash(req.body.userid, req.body.password);
 
     aryQuery.push("insert into user_t values (");
     aryQuery.push("$1, $2, $3, 0");
@@ -359,12 +359,6 @@ exports.addUser = function(req, res) {
         }
     });
 };
-
-// ハッシュ
-const getHash = function(id, password) {
-    const hash = crypto.scryptSync(id + password, 'yakisoba', 10).toString("base64");
-    return hash;
-}
 
 // NDLから情報を取得し、json形式でレスポンスを返す
 // ajaxを利用してのアクセスを想定

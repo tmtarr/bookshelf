@@ -6,7 +6,8 @@ var express = require('express'),
 	passport = require('passport'),
 	LocalStrategy = require('passport-local').Strategy,
     session = require('express-session'),
-    pool = require('./modules/dbpool')
+    pool = require('./modules/dbpool'),
+    hashgen = require('./modules/hashgen')
 	;
 
 const PORT = process.env.PORT || 5000;
@@ -40,7 +41,7 @@ passport.use(new LocalStrategy(
         //return done(null, "hello");
         //console.log("にんしょうちゅう");
         //console.log(getHash(username, password));
-        const hash = getHash(username, password);
+        const hash = hashgen.getHash(username, password);
 
         // 認証
         var aryQuery = [];
