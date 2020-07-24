@@ -124,7 +124,10 @@ async function getBooklist(req, userid) {
         aryQuery.push("  and wish_flg = '1'");
     }
 
-    aryQuery.push("order by id desc");
+    aryQuery.push("order by");
+    aryQuery.push("ins_date desc");
+    aryQuery.push(",read_date desc");
+    aryQuery.push(",id desc");
 
     // 実行
     const res = await pool.query(numberQueryParameters(aryQuery.join(" ")), aryParam);
