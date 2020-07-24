@@ -1,2 +1,5 @@
-# 概要
-本を管理する
+# bookshelf
+本を管理するシンプルなほんだなアプリ
+
+## License
+  [MIT](LICENSE)
