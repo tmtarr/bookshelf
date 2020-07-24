@@ -6,12 +6,12 @@ declare
 	mod11  integer;
 	checkdigit varchar;
 begin
-	-- Œ…”ƒ`ƒFƒbƒN
+	-- æ¡æ•°ãƒã‚§ãƒƒã‚¯
 	if char_length(isbn13) < 13 then
 		return '';
 	end if;
 
-	-- ƒ`ƒFƒbƒNƒfƒBƒWƒbƒgŒvZ
+	-- ãƒã‚§ãƒƒã‚¯ãƒ‡ã‚£ã‚¸ãƒƒãƒˆè¨ˆç®—
 	isbn9 := substring(isbn13, 4, 9);
 	numcheck := numcheck + to_number(substring(isbn9, 1, 1), '9') * 10;
 	numcheck := numcheck + to_number(substring(isbn9, 2, 1), '9') * 9;

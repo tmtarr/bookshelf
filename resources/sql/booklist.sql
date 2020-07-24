@@ -1,4 +1,4 @@
--- ƒe[ƒuƒ‹ì¬
+-- create table
 create table booklist(
 	id varchar(5),
 	bookname varchar(200),
