@@ -11,6 +11,7 @@ function Display() {
     this.login = false;
 }
 
+// 画面制御情報を設定
 function makeDisplay(req) {
     const display = new Display();
     if (req.user) {
@@ -148,7 +149,7 @@ exports.new = function(req, res) {
 	res.render('posts/edit', {display: display, book: book});
 };
 
-// 書籍登録処理
+// 書籍情報登録処理
 exports.create = function(req, res) {
 
     (async () => {
@@ -234,14 +235,14 @@ exports.edit = function(req, res) {
     display.mode = "edit";
 
     pool.query('select * from booklist where id = $1', [req.params.id], (perr, pres) => {
-        var book = pres.rows[0];
+        const book = pres.rows[0];
         book.ebookFlg = book.ebook_flg == 1 ? "checked" : "";
         book.wishFlg = book.wish_flg == 1 ? "checked" : "";
         res.render('posts/edit', {display: display, book: book, id: req.params.id});
     });
 };
 
-// 更新処理
+// 書籍情報更新処理
 exports.update = function(req, res) {
 
     // 更新
@@ -290,6 +291,7 @@ exports.update = function(req, res) {
     });
 };
 
+// 書籍情報削除処理
 exports.delete = function(req, res) {
 
     // 削除
@@ -325,7 +327,8 @@ exports.login = function(req, res) {
 	res.render('login', {display: display});
 };
 
-// ログアウト
+// ログアウト処理
+// ログアウト後はトップへリダイレクト
 exports.logout = function(req, res) {
     req.logout();
     res.redirect('/');
@@ -341,8 +344,8 @@ exports.signup = function(req, res) {
 // サインアップ処理
 exports.addUser = function(req, res) {
     // 登録
-    var aryParam = [];
-    var aryQuery = [];
+    const aryParam = [];
+    const aryQuery = [];
     const hash = hashgen.getHash(req.body.userid, req.body.password);
 
     aryQuery.push("insert into user_t values (");
@@ -352,7 +355,6 @@ exports.addUser = function(req, res) {
 
     aryParam.push(req.body.userid);
     aryParam.push(req.body.name);
-    //aryParam.push(req.body.password);
     aryParam.push(hash);
 
     pool.query(aryQuery.join(" "), aryParam, (perr, pres) => {
@@ -361,7 +363,7 @@ exports.addUser = function(req, res) {
             display.error = true;
             res.render('signup', {display: display});
         } else {
-            // ログイン状態でトップ画面にリダイレクト
+            // ログイン状態でhome画面にリダイレクト
             req.login(req.body.userid, function(err) {
                 return res.redirect('/home');
             });
@@ -378,10 +380,11 @@ function displayError(req, res, message) {
 // クエリパラメータを置換
 function numberQueryParameters(strIn) {
 
-	var count = 1;
-	var strOut = strIn;
+	let count = 1;
+	let strOut = strIn;
 
-	var re = /\?/;
+    // クエリ中の ? を $1, $2, $3... のように置換する
+	let re = /\?/;
 	while (re.test(strOut)) {
 		strOut = strOut.replace(re, "$" + count);
 		count++;

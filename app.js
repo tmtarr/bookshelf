@@ -42,12 +42,12 @@ passport.use(new LocalStrategy(
         const hash = hashgen.getHash(username, password);
 
         // 認証
-        var aryQuery = [];
+        const aryQuery = [];
         aryQuery.push("select userid from user_t where");
         aryQuery.push("userid = $1");
         aryQuery.push("and password = $2");
     
-        var aryParam = [];
+        const aryParam = [];
         aryParam.push(username);
         aryParam.push(hash);
     
