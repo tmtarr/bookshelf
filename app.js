@@ -1,15 +1,11 @@
 // モジュール
-const express = require('express'),
-	methodOverride = require('method-override'),
-	app = express(),
-	post = require('./routes/post'),
-	api = require('./routes/api'),
-	passport = require('passport'),
-	LocalStrategy = require('passport-local').Strategy,
-    session = require('express-session'),
-    pool = require('./modules/dbpool'),
-    hashgen = require('./modules/hashgen')
-	;
+const express = require('express');
+const methodOverride = require('method-override');
+const app = express();
+const post = require('./routes/post');
+const api = require('./routes/api');
+const passport = require('passport');
+const session = require('express-session');
 
 const PORT = process.env.PORT || 5000;
 
@@ -36,37 +32,8 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-// パスワードチェックのロジック
-passport.use(new LocalStrategy(
-    function(username, password, done) {
-        const hash = hashgen.getHash(username, password);
-
-        // 認証
-        const aryQuery = [];
-        aryQuery.push("select userid from user_t where");
-        aryQuery.push("userid = $1");
-        aryQuery.push("and password = $2");
-    
-        const aryParam = [];
-        aryParam.push(username);
-        aryParam.push(hash);
-    
-        pool.query(aryQuery.join(" "), aryParam, (perr, pres) => {
-            if (pres.rowCount == 0) {
-                return done(null, false, {message: 'ちがうよ'});
-            }
-            return done(null, username);
-        });
-    }
-));
-
-// ユーザー情報をセッション情報に格納する際のシリアライズ／取得する際のデシリアライズ
-passport.serializeUser(function(user, done) {
-    done(null, user);
-});
-passport.deserializeUser(function(user, done) {
-    done(null, user);
-});
+// passport設定
+require('./modules/passport')();
 
 // ルーティング設定
 app.get('/', post.main);
