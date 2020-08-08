@@ -4,6 +4,7 @@
 -- other:
 -- \i '/absolutepath/projectroot/resources/sql/00_all.sql'
 \encoding utf-8
+\ir create_database.sql
 \ir chgisbn13to10.sql
 \ir booklist.sql
 \ir user_t.sql
