@@ -71,11 +71,9 @@
             <% } %>
             <% if (display.login) { %>
             <a class="nav-item nav-link" href="/logout">Logout</a>
+              <a class="nav-item nav-link <%= display.activeSetting %>" href="/setting">userid: <%= display.userid %></a>
             <% } %>
-          </div>
-          <% if (display.login) { %>
-            <span class="navbar-text">userid: <%= display.userid %></span>
-          <% } %>
+            </div>
         </div>
       </nav>
     </header>

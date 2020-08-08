@@ -6,6 +6,7 @@ function Display() {
     this.activeHome = "";
     this.activeNew = "";
     this.activeDoc = "";
+    this.activeSetting = "";
     this.mode = "";
     this.userid = "";
     this.login = false;
@@ -371,6 +372,74 @@ exports.addUser = function(req, res) {
                 return res.redirect('/home');
             });
         }
+    });
+};
+
+// ユーザー情報設定画面を起動
+exports.setting = function(req, res) {
+
+    // 画面制御
+    const display = makeDisplay(req);
+    display.activeSetting = "active";
+
+    // データ取得
+    (async () => {
+        // ユーザー情報取得
+        const userinfo = await getUserInfo(req, display.userid);
+        userinfo.publicFlg = userinfo.public_flg == 1 ? "checked" : "";
+
+        res.render('setting', {display: display, userinfo: userinfo});
+    })();
+}
+
+// 書籍リストを取得
+async function getUserInfo(req, userid) {
+
+    // パラメータ
+    const aryParam = [];
+
+    // クエリ
+    const aryQuery = [];
+    aryQuery.push("select * from user_t");
+    aryQuery.push("where userid = $1");
+    aryParam.push(userid);
+
+    // 実行
+    const res = await pool.query(aryQuery.join(" "), aryParam);
+    return res.rows[0];
+}
+
+// ユーザー情報更新処理
+exports.updUser = function(req, res) {
+
+    // 更新
+    // クエリ
+    const aryQuery = [];
+    aryQuery.push("update user_t");
+    aryQuery.push("set");
+    aryQuery.push("name = $1");
+    aryQuery.push(",public_flg = $2");
+    aryQuery.push("where");
+    aryQuery.push("userid = $3");
+    
+    // パラメータ
+    const aryParam = [];
+    aryParam.push(req.body.name);
+    aryParam.push(req.body.publicFlg);
+    aryParam.push(req.user);
+
+    // クエリ実行
+    pool.query(aryQuery.join(" "), aryParam, (perr, pres) => {
+
+        // エラー処理
+        if (perr) {
+            console.log(perr.stack);
+            displayError(req, res, '更新処理でエラーが発生しました。');
+            return;
+        }
+
+        // 一覧を再表示
+        res.redirect('/home');
     });
 };
 
