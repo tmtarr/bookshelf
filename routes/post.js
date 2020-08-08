@@ -419,6 +419,7 @@ exports.updUser = function(req, res) {
     aryQuery.push("set");
     aryQuery.push("name = $1");
     aryQuery.push(",public_flg = $2");
+    aryQuery.push(",upd_date = to_char(now() at time zone 'JST', 'YYYY/MM/DD|HH24:MI:SS')");
     aryQuery.push("where");
     aryQuery.push("userid = $3");
     
