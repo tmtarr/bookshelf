@@ -51,7 +51,13 @@ exports.index = function(req, res) {
     // データ取得
     (async () => {
         // ユーザー名取得
-        display.username = await getUserName(req, res, userid, isSelf);
+        try {
+            display.username = await getUserName(req, res, userid, isSelf);
+        } catch(e) {
+            console.log("DB接続でエラー発生");
+            console.log(e);
+            displayError(req, res, "DB接続でエラーが発生しました。管理者へ連絡してください。");
+        }
         if (!display.username) {
             return;
         }
