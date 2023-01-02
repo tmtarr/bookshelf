@@ -6,7 +6,7 @@
 
         <h5>事前準備</h5>
         以下URLをブックマークレットとしてブラウザに登録してください。<br><br>
-        <a href='javascript:(function(){const u=location.href;const m=u.match(/\/dp\/([0-9]+)/);if(m){window.open("https://intense-temple-32472.herokuapp.com/posts/new?isbn="+m[1]);}})();'>本を登録</a><br>
+        <a href='javascript:(function(){const u=location.href;const m=u.match(/\/dp\/([0-9]+)/);if(m){window.open("<%= display.domain %>/posts/new?isbn="+m[1]);}})();'>本を登録</a><br>
         <a href='javascript:(function(){const u=location.href;const m=u.match(/\/dp\/([0-9]+)/);if(m){window.open("http://localhost:5000/posts/new?isbn="+m[1]);}})();'>本を登録(local)</a> ※開発用<br><br><br>
         
         <h5>つかいかた</h5>
@@ -15,5 +15,6 @@
         　※紙の本のページで実行してください。kindleページは未対応です。<br><br>
         3. ISBNが設定された状態で登録ページが開きます。<br>
       </p>
+      
     </div>
 <%- include('footer'); -%>

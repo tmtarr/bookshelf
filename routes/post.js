@@ -325,6 +325,7 @@ exports.doc = function(req, res) {
     // 画面制御
     const display = makeDisplay(req);
     display.activeDoc = "active";
+    display.domain = req.protocol + '://' + req.headers.host;
 
 	res.render('doc', {display: display});
 };
